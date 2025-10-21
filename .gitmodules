@@ -1,3 +1,3 @@
-[submodule "shadcn-storybook-registry"]
-	path = shadcn-storybook-registry
-	url = https://github.com/Wondermove-Inc/shadcn-storybook-registry
+[submodule "design-system"]
+	path = design-system
+	url = https://github.com/Wondermove-Inc/shadcn-storybook-registry.git
