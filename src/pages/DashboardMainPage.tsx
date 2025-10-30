@@ -1,4 +1,5 @@
 import { Users, FileText, DollarSign, Store } from 'lucide-react';
+import { useOutletContext } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { StatsCard } from '@/components/dashboard/StatsCard';
 import { PendingPaymentsList } from '@/components/dashboard/PendingPaymentsList';
@@ -9,10 +10,21 @@ import {
   mockExpiringContracts,
 } from '@/lib/mock/dashboard';
 
+interface DashboardLayoutContext {
+  onToggleSidebar: () => void;
+  onOpenNotifications: () => void;
+}
+
 export function DashboardMainPage() {
+  const { onToggleSidebar, onOpenNotifications } = useOutletContext<DashboardLayoutContext>();
+
   return (
     <div className="flex flex-col h-full bg-black">
-      <Header title="Dashboard" />
+      <Header
+        title="Dashboard"
+        onToggleSidebar={onToggleSidebar}
+        onOpenNotifications={onOpenNotifications}
+      />
       <div className="flex-1 p-8 bg-black">
         {/* Stats Cards Grid */}
         <div className="grid grid-cols-4 gap-6 mb-8">

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { useAuth } from '@/contexts/AuthContext';
@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 export function DashboardLayout() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
     // Redirect if not logged in
@@ -25,11 +26,20 @@ export function DashboardLayout() {
     return null;
   }
 
+  const handleToggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleOpenNotifications = () => {
+    // TODO: Implement notification panel
+    console.log('Open notifications');
+  };
+
   return (
     <div className="flex h-screen bg-black">
-      <Sidebar />
+      {isSidebarOpen && <Sidebar />}
       <main className="flex-1 overflow-auto min-w-[1008px]">
-        <Outlet />
+        <Outlet context={{ onToggleSidebar: handleToggleSidebar, onOpenNotifications: handleOpenNotifications }} />
       </main>
     </div>
   );
