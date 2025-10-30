@@ -10,7 +10,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  // 초기 로드 시 localStorage에서 사용자 정보 복원
+  // Restore user from localStorage on initial load
   useEffect(() => {
     const currentUser = authApi.getCurrentUser();
     setUser(currentUser);

@@ -1,32 +1,32 @@
 import { LoginCredentials, User } from '@/types/auth';
 import { mockUsers, MOCK_PASSWORD } from '@/lib/mock/auth';
 
-// 로그인 API (Mock)
+// Login API (Mock)
 export async function login(credentials: LoginCredentials): Promise<User> {
-  // 실제 API 호출을 시뮬레이션하기 위한 딜레이
+  // Simulate API call delay
   await new Promise((resolve) => setTimeout(resolve, 800));
 
-  // 사용자 찾기
+  // Find user
   const user = mockUsers.find((u) => u.email === credentials.email);
 
   if (!user) {
-    throw new Error('사용자를 찾을 수 없습니다.');
+    throw new Error('Invalid email or password');
   }
 
-  // 비밀번호 확인 (실제로는 서버에서 해시 비교)
+  // Verify password (in real app, this would be done on server with hash comparison)
   if (credentials.password !== MOCK_PASSWORD) {
-    throw new Error('비밀번호가 일치하지 않습니다.');
+    throw new Error('Invalid email or password');
   }
 
   return user;
 }
 
-// 로그아웃 API (Mock)
+// Logout API (Mock)
 export async function logout(): Promise<void> {
   await new Promise((resolve) => setTimeout(resolve, 300));
 }
 
-// 현재 사용자 정보 가져오기 (localStorage에서)
+// Get current user from localStorage
 export function getCurrentUser(): User | null {
   const userStr = localStorage.getItem('user');
   if (!userStr) return null;
@@ -38,12 +38,12 @@ export function getCurrentUser(): User | null {
   }
 }
 
-// 사용자 정보 저장
+// Save user to localStorage
 export function saveUser(user: User): void {
   localStorage.setItem('user', JSON.stringify(user));
 }
 
-// 사용자 정보 제거
+// Remove user from localStorage
 export function removeUser(): void {
   localStorage.removeItem('user');
 }

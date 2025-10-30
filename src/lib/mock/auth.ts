@@ -1,7 +1,7 @@
 import { User } from '@/types/auth';
 
 export const mockUsers: User[] = [
-  // WM 유저
+  // WM users
   {
     id: 'wm-admin-001',
     email: 'admin@wondermove.com',
@@ -21,7 +21,7 @@ export const mockUsers: User[] = [
     name: 'WM Viewer',
   },
 
-  // 리셀러 유저 (메가존)
+  // Reseller users (Megazone)
   {
     id: 'reseller-admin-001',
     email: 'admin@megazone.com',
@@ -48,5 +48,5 @@ export const mockUsers: User[] = [
   },
 ];
 
-// 비밀번호는 모두 동일하게 설정 (실제로는 해시화되어야 함)
+// All accounts use the same password (in production, this should be hashed)
 export const MOCK_PASSWORD = 'admin123';

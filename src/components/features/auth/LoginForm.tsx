@@ -26,11 +26,11 @@ import {
 const loginSchema = z.object({
   email: z
     .string()
-    .min(1, '이메일을 입력해주세요.')
-    .email('올바른 이메일 형식이 아닙니다.'),
+    .min(1, 'Email is required')
+    .email('Invalid email address'),
   password: z
     .string()
-    .min(8, '비밀번호는 최소 8자 이상이어야 합니다.'),
+    .min(8, 'Password must be at least 8 characters'),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -55,7 +55,7 @@ export function LoginForm() {
     try {
       await login(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '로그인에 실패했습니다.');
+      setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +63,7 @@ export function LoginForm() {
 
   const handleForgotPassword = (e: React.MouseEvent) => {
     e.preventDefault();
-    alert('비밀번호 재설정 기능은 준비중입니다.');
+    alert('Password reset feature is coming soon.');
   };
 
   return (
@@ -149,7 +149,7 @@ export function LoginForm() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    로그인 중...
+                    Logging in...
                   </>
                 ) : (
                   'Login'

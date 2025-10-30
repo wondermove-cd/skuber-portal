@@ -1,13 +1,13 @@
-// WM 유저 역할
+// WM user roles
 export type WMRole = 'wm_admin' | 'wm_editor' | 'wm_viewer';
 
-// 리셀러 유저 역할
+// Reseller user roles
 export type ResellerRole = 'reseller_admin' | 'reseller_editor' | 'reseller_viewer';
 
-// 전체 역할
+// All user roles
 export type UserRole = WMRole | ResellerRole;
 
-// 사용자 정보
+// User information
 export interface User {
   id: string;
   email: string;
@@ -17,13 +17,13 @@ export interface User {
   resellerName?: string;
 }
 
-// 로그인 자격증명
+// Login credentials
 export interface LoginCredentials {
   email: string;
   password: string;
 }
 
-// 인증 컨텍스트 타입
+// Authentication context type
 export interface AuthContextType {
   user: User | null;
   login: (credentials: LoginCredentials) => Promise<void>;

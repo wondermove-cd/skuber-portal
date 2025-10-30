@@ -23,30 +23,30 @@ export function DashboardPage() {
         {/* User Info Card */}
         <Card>
           <CardHeader>
-            <CardTitle>사용자 정보</CardTitle>
+            <CardTitle>User Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">이름</p>
+                <p className="text-sm text-muted-foreground">Name</p>
                 <p className="text-base font-medium text-foreground">
                   {user.name}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">이메일</p>
+                <p className="text-sm text-muted-foreground">Email</p>
                 <p className="text-base font-medium text-foreground">
                   {user.email}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">역할</p>
+                <p className="text-sm text-muted-foreground">Role</p>
                 <p className="text-base font-medium text-foreground">
                   {user.role}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">사용자 ID</p>
+                <p className="text-sm text-muted-foreground">User ID</p>
                 <p className="text-base font-medium text-foreground">
                   {user.id}
                 </p>
@@ -54,13 +54,13 @@ export function DashboardPage() {
               {user.resellerId && (
                 <>
                   <div>
-                    <p className="text-sm text-muted-foreground">리셀러 ID</p>
+                    <p className="text-sm text-muted-foreground">Reseller ID</p>
                     <p className="text-base font-medium text-foreground">
                       {user.resellerId}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">리셀러명</p>
+                    <p className="text-sm text-muted-foreground">Reseller Name</p>
                     <p className="text-base font-medium text-foreground">
                       {user.resellerName}
                     </p>
@@ -74,13 +74,13 @@ export function DashboardPage() {
         {/* Test Accounts Info */}
         <Card>
           <CardHeader>
-            <CardTitle>테스트 계정 정보</CardTitle>
+            <CardTitle>Test Account Information</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4 text-sm">
               <div>
                 <p className="font-semibold text-foreground mb-2">
-                  WM 유저 계정:
+                  WM User Accounts:
                 </p>
                 <ul className="space-y-1 text-muted-foreground">
                   <li>• admin@wondermove.com (WM Admin)</li>
@@ -90,7 +90,7 @@ export function DashboardPage() {
               </div>
               <div>
                 <p className="font-semibold text-foreground mb-2">
-                  리셀러 유저 계정 (Megazone):
+                  Reseller User Accounts (Megazone):
                 </p>
                 <ul className="space-y-1 text-muted-foreground">
                   <li>• admin@megazone.com (Megazone Admin)</li>
@@ -99,7 +99,7 @@ export function DashboardPage() {
                 </ul>
               </div>
               <p className="text-muted-foreground pt-2">
-                모든 계정의 비밀번호: <code className="font-mono">admin123</code>
+                Password for all accounts: <code className="font-mono">admin123</code>
               </p>
             </div>
           </CardContent>
