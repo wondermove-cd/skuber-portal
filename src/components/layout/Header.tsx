@@ -15,7 +15,7 @@ export function Header({ onToggleSidebar, onOpenNotifications }: HeaderProps) {
           variant="ghost"
           size="icon"
           onClick={onToggleSidebar}
-          className="text-zinc-400 hover:text-white hover:bg-zinc-900"
+          className="text-zinc-400 hover:text-white hover:bg-zinc-800"
         >
           <PanelLeft className="w-5 h-5" />
         </Button>
@@ -25,7 +25,7 @@ export function Header({ onToggleSidebar, onOpenNotifications }: HeaderProps) {
           variant="ghost"
           size="icon"
           onClick={onOpenNotifications}
-          className="text-zinc-400 hover:text-white hover:bg-zinc-900"
+          className="text-zinc-400 hover:text-white hover:bg-zinc-800"
         >
           <Bell className="w-5 h-5" />
         </Button>
