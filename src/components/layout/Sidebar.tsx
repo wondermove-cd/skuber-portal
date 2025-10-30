@@ -55,18 +55,18 @@ export function Sidebar() {
   const userInitials = getInitials(user.name);
 
   return (
-    <div className="w-60 h-screen bg-background border-r flex flex-col">
+    <div className="w-60 h-screen bg-black border-r border-zinc-800 flex flex-col">
       {/* Logo Section */}
       <div className="p-6">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-sm">SK</span>
           </div>
-          <span className="font-semibold text-foreground">Partner Portal</span>
+          <span className="font-semibold text-white">Partner Portal</span>
         </div>
       </div>
 
-      <Separator />
+      <Separator className="bg-zinc-800" />
 
       {/* Navigation Menu */}
       <nav className="flex-1 p-4">
@@ -84,8 +84,8 @@ export function Sidebar() {
                     transition-colors
                     ${
                       isActive
-                        ? 'bg-primary text-primary-foreground'
-                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                        ? 'bg-zinc-800 text-white'
+                        : 'text-zinc-400 hover:bg-zinc-900 hover:text-white'
                     }
                   `}
                 >
@@ -98,23 +98,23 @@ export function Sidebar() {
         </ul>
       </nav>
 
-      <Separator />
+      <Separator className="bg-zinc-800" />
 
       {/* User Info Section */}
       <div className="p-4">
         <DropdownMenu>
           <DropdownMenuTrigger className="w-full">
-            <div className="flex items-center gap-3 p-2 rounded-md hover:bg-muted transition-colors cursor-pointer">
+            <div className="flex items-center gap-3 p-2 rounded-md hover:bg-zinc-900 transition-colors cursor-pointer">
               <Avatar className="w-8 h-8">
-                <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                <AvatarFallback className="bg-zinc-700 text-white text-xs">
                   {userInitials}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 text-left">
-                <div className="text-sm font-medium text-foreground">
+                <div className="text-sm font-medium text-white">
                   {user.name}
                 </div>
-                <div className="text-xs text-muted-foreground truncate">
+                <div className="text-xs text-zinc-400 truncate">
                   {user.email}
                 </div>
               </div>

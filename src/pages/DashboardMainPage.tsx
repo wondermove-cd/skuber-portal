@@ -1,3 +1,4 @@
+import { Users, FileText, DollarSign, Store } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { StatsCard } from '@/components/dashboard/StatsCard';
 import { PendingPaymentsList } from '@/components/dashboard/PendingPaymentsList';
@@ -10,25 +11,27 @@ import {
 
 export function DashboardMainPage() {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-black">
       <Header title="Dashboard" />
 
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-8 bg-black">
         {/* Stats Cards Grid */}
         <div className="grid grid-cols-4 gap-6 mb-8">
           <StatsCard
-            title="Total Customers"
+            title="Total customers"
             value={mockDashboardStats.totalCustomers.value}
             change={mockDashboardStats.totalCustomers.change}
             changeType={mockDashboardStats.totalCustomers.changeType}
             changeLabel={mockDashboardStats.totalCustomers.label}
+            icon={Users}
           />
           <StatsCard
-            title="Active Contracts"
+            title="Active contracts"
             value={mockDashboardStats.activeContracts.value}
             change={mockDashboardStats.activeContracts.change}
             changeType={mockDashboardStats.activeContracts.changeType}
             changeLabel={mockDashboardStats.activeContracts.label}
+            icon={FileText}
           />
           <StatsCard
             title="Monthly Charge"
@@ -37,6 +40,7 @@ export function DashboardMainPage() {
             changeType={mockDashboardStats.monthlyCharge.changeType}
             changeLabel={mockDashboardStats.monthlyCharge.label}
             isCurrency
+            icon={DollarSign}
           />
           <StatsCard
             title="Resellers"
@@ -44,6 +48,7 @@ export function DashboardMainPage() {
             change={mockDashboardStats.resellers.change}
             changeType={mockDashboardStats.resellers.changeType}
             changeLabel={mockDashboardStats.resellers.label}
+            icon={Store}
           />
         </div>
 

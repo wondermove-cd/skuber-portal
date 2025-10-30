@@ -8,6 +8,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/utils/format';
 
 interface PendingPayment {
@@ -24,39 +25,48 @@ interface PendingPaymentsListProps {
 
 export function PendingPaymentsList({ payments }: PendingPaymentsListProps) {
   return (
-    <Card>
+    <Card className="bg-zinc-900 border-zinc-800">
       <CardHeader>
-        <CardTitle>Pending Payments</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-white">Pending Payments List</CardTitle>
+          <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white">
+            View All
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Contract Name</TableHead>
-              <TableHead>Contract ID</TableHead>
-              <TableHead>Contract Type</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
+            <TableRow className="border-zinc-800 hover:bg-transparent">
+              <TableHead className="text-zinc-500">Contract</TableHead>
+              <TableHead className="text-zinc-500">Contract Type</TableHead>
+              <TableHead className="text-right text-zinc-500">Amount</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {payments.map((payment) => (
-              <TableRow key={payment.id}>
-                <TableCell className="font-medium">
-                  {payment.contractName}
-                </TableCell>
-                <TableCell className="text-muted-foreground">
-                  {payment.contractId}
+              <TableRow key={payment.id} className="border-zinc-800">
+                <TableCell>
+                  <div className="flex flex-col">
+                    <span className="font-medium text-white">
+                      {payment.contractName}
+                    </span>
+                    <span className="text-xs text-zinc-500">
+                      {payment.contractId}
+                    </span>
+                  </div>
                 </TableCell>
                 <TableCell>
                   <Badge
                     variant={
                       payment.contractType === 'Direct' ? 'default' : 'secondary'
                     }
+                    className="bg-zinc-800 text-zinc-300 border-zinc-700"
                   >
                     {payment.contractType}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-right font-medium">
+                <TableCell className="text-right font-medium text-white">
                   {formatCurrency(payment.amount)}
                 </TableCell>
               </TableRow>
