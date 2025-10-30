@@ -21,13 +21,15 @@ export function DashboardMainPage() {
   return (
     <div className="flex flex-col h-full bg-black">
       <Header
-        title="Dashboard"
         onToggleSidebar={onToggleSidebar}
         onOpenNotifications={onOpenNotifications}
       />
-      <div className="flex-1 p-8 bg-black">
+      <div className="flex-1 p-8 bg-black flex flex-col gap-6">
+        {/* Dashboard Title */}
+        <h1 className="text-2xl font-semibold text-white">Dashboard</h1>
+
         {/* Stats Cards Grid */}
-        <div className="grid grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-4 gap-6">
           <StatsCard
             title="Total customers"
             value={mockDashboardStats.totalCustomers.value}
