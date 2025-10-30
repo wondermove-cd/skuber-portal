@@ -13,7 +13,6 @@ export function DashboardMainPage() {
   return (
     <div className="flex flex-col h-full bg-black">
       <Header title="Dashboard" />
-
       <div className="flex-1 p-8 bg-black">
         {/* Stats Cards Grid */}
         <div className="grid grid-cols-4 gap-6 mb-8">

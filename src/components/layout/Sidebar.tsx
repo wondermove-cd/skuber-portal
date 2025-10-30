@@ -7,6 +7,7 @@ import {
   Settings,
   LogOut,
 } from 'lucide-react';
+import logoSvg from '@/asset/Sidebar/logo.svg';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -59,10 +60,7 @@ export function Sidebar() {
       {/* Logo Section */}
       <div className="p-6">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">SK</span>
-          </div>
-          <span className="font-semibold text-white">Partner Portal</span>
+          <img src={logoSvg} alt="Skuber Partner Portal" className="h-8" />
         </div>
       </div>
 
