@@ -9,7 +9,7 @@ interface HeaderProps {
 export function Header({ onToggleSidebar, onOpenNotifications }: HeaderProps) {
   return (
     <div className="border-b border-zinc-800 bg-black">
-      <div className="flex items-center justify-between px-6 h-20">
+      <div className="flex items-center justify-between px-6 h-16">
         {/* Left side - Sidebar toggle button */}
         <Button
           variant="ghost"

@@ -58,7 +58,7 @@ export function Sidebar() {
   return (
     <div className="w-60 h-screen bg-black border-r border-zinc-800 flex flex-col">
       {/* Logo Section */}
-      <div className="flex items-center h-20 px-6">
+      <div className="flex items-center h-16 px-6">
         <img src={logoSvg} alt="Skuber Partner Portal" className="h-8" />
       </div>
 
