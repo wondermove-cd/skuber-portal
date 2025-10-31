@@ -12,7 +12,7 @@ export function Header({ onToggleSidebar, onOpenNotifications }: HeaderProps) {
         {/* Left side - Sidebar toggle button */}
         <button
           onClick={onToggleSidebar}
-          className="w-9 h-9 inline-flex items-center justify-center rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+          className="h-8 px-3 py-2 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2"
         >
           <PanelLeft className="w-5 h-5" />
         </button>
@@ -20,7 +20,7 @@ export function Header({ onToggleSidebar, onOpenNotifications }: HeaderProps) {
         {/* Right side - Notification button */}
         <button
           onClick={onOpenNotifications}
-          className="w-9 h-9 inline-flex items-center justify-center rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+          className="h-8 px-3 py-2 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2"
         >
           <Bell className="w-5 h-5" />
         </button>
