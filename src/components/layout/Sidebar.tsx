@@ -116,7 +116,7 @@ export function Sidebar() {
               </div>
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent align="end" className="w-56 mb-4">
             <DropdownMenuItem onClick={logout} className="cursor-pointer">
               <LogOut className="w-4 h-4 mr-2" />
               <span>Logout</span>
