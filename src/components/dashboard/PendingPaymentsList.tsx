@@ -8,7 +8,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/utils/format';
 
 interface PendingPayment {
@@ -29,9 +28,9 @@ export function PendingPaymentsList({ payments }: PendingPaymentsListProps) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-white">Pending Payments List</CardTitle>
-          <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white">
+          <button className="px-3 py-1.5 text-sm rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
             View All
-          </Button>
+          </button>
         </div>
       </CardHeader>
       <CardContent>
