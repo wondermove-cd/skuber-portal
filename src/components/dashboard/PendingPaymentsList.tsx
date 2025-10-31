@@ -28,7 +28,7 @@ export function PendingPaymentsList({ payments }: PendingPaymentsListProps) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-white">Pending Payments List</CardTitle>
-          <button className="h-8 px-3 py-2 text-sm rounded-md bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors flex items-center justify-center gap-2">
+          <button className="h-8 px-3 py-2 text-sm rounded-md bg-[#E5E5E5] text-zinc-900 hover:bg-zinc-300 transition-colors flex items-center justify-center gap-2">
             View All
           </button>
         </div>
