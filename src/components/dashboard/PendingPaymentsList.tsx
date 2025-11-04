@@ -24,11 +24,11 @@ interface PendingPaymentsListProps {
 
 export function PendingPaymentsList({ payments }: PendingPaymentsListProps) {
   return (
-    <Card className="bg-zinc-900 border-zinc-800">
+    <Card className="bg-card border-border">
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-white">Pending Payments List</CardTitle>
-          <button className="h-8 px-3 py-2 text-sm rounded-md bg-[#E5E5E5] text-zinc-900 hover:bg-zinc-300 transition-colors flex items-center justify-center gap-2">
+        <div className="flex items-center justify-between h-8">
+          <CardTitle className="text-xl font-semibold leading-none text-foreground flex items-center">Pending Payments List</CardTitle>
+          <button className="h-8 px-3 py-2 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
             View All
           </button>
         </div>
@@ -36,36 +36,36 @@ export function PendingPaymentsList({ payments }: PendingPaymentsListProps) {
       <CardContent>
         <Table>
           <TableHeader>
-            <TableRow className="border-zinc-800 hover:bg-transparent">
-              <TableHead className="text-zinc-500">Contract</TableHead>
-              <TableHead className="text-zinc-500">Contract Type</TableHead>
-              <TableHead className="text-right text-zinc-500">Amount</TableHead>
+            <TableRow className="border-border hover:bg-transparent">
+              <TableHead className="text-muted-foreground">Contract</TableHead>
+              <TableHead className="text-muted-foreground">Contract Type</TableHead>
+              <TableHead className="text-right text-muted-foreground">Amount</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {payments.map((payment) => (
-              <TableRow key={payment.id} className="border-zinc-800">
-                <TableCell>
+              <TableRow key={payment.id} className="border-border h-18">
+                <TableCell className="py-2">
                   <div className="flex flex-col">
-                    <span className="font-medium text-white">
+                    <span className="font-medium text-foreground">
                       {payment.contractName}
                     </span>
-                    <span className="text-xs text-zinc-500">
+                    <span className="text-xs text-muted-foreground">
                       {payment.contractId}
                     </span>
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="py-2">
                   <Badge
                     variant={
                       payment.contractType === 'Direct' ? 'default' : 'secondary'
                     }
-                    className="bg-zinc-800 text-zinc-300 border-zinc-700"
+                    className="bg-secondary text-secondary-foreground border-border"
                   >
                     {payment.contractType}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-right font-medium text-white">
+                <TableCell className="text-right font-medium text-foreground py-2">
                   {formatCurrency(payment.amount)}
                 </TableCell>
               </TableRow>

@@ -43,7 +43,7 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --background: oklch(0.985 0 0); /* #FAFAFA */
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -125,4 +125,27 @@
 .dark input[type="password"],
 .dark input[type="text"] {
   background-color: oklch(1 0 0 / 5%); /* rgba(255,255,255,0.05) */
+}
+
+/* Autofill 배경색 제거 */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  background-color: transparent !important;
+  box-shadow: inset 0 0 20px 20px hsl(var(--background)) !important;
+}
+
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active {
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  background-color: oklch(1 0 0 / 5%) !important;
+  box-shadow: inset 0 0 20px 20px oklch(1 0 0 / 5%) !important;
 }

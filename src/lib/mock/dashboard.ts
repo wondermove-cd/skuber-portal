@@ -39,8 +39,8 @@ export const mockPendingPayments = [
   },
   {
     id: '2',
-    contractName: 'Kathy Pacheco',
-    contractId: generateContractId(new Date('2024-02-20'), 'CUST002', 1),
+    contractName: 'TechPartners Solutions',
+    contractId: 'WMRES-001',
     contractType: 'Reseller' as const,
     amount: 9952.52,
   },

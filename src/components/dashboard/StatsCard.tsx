@@ -29,22 +29,22 @@ export function StatsCard({
       : `${isPositive ? '+' : ''}${formatNumber(change)}`;
 
   return (
-    <Card className="bg-zinc-900 border-zinc-800">
+    <Card className="bg-card border-border">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium text-zinc-400">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             {title}
           </CardTitle>
           {Icon && (
-            <div className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center">
-              <Icon className="w-4 h-4 text-zinc-400" />
+            <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
+              <Icon className="w-4 h-4 text-muted-foreground" />
             </div>
           )}
         </div>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-1">
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-foreground">
             {formattedValue}
           </div>
           <div className="flex items-center gap-1 text-xs">
@@ -56,7 +56,7 @@ export function StatsCard({
             <span className={isPositive ? 'text-green-500' : 'text-red-500'}>
               {formattedChange}
             </span>
-            <span className="text-zinc-500">{changeLabel}</span>
+            <span className="text-muted-foreground">{changeLabel}</span>
           </div>
         </div>
       </CardContent>
