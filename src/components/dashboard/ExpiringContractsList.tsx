@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -25,17 +26,19 @@ interface ExpiringContractsListProps {
 export function ExpiringContractsList({
   contracts,
 }: ExpiringContractsListProps) {
+  const { t } = useTranslation();
+
   return (
     <Card className="bg-card border-border">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold leading-none text-foreground h-8 flex items-center">Contacts with Expiring Contracts</CardTitle>
+        <CardTitle className="text-xl font-semibold leading-none text-foreground h-8 flex items-center">{t('dashboard.contactsWithExpiringContracts')}</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow className="border-border hover:bg-transparent">
-              <TableHead className="text-muted-foreground">Contact</TableHead>
-              <TableHead className="text-muted-foreground">Days Left</TableHead>
+              <TableHead className="text-muted-foreground">{t('dashboard.contact')}</TableHead>
+              <TableHead className="text-muted-foreground">{t('dashboard.daysLeft')}</TableHead>
               <TableHead className="w-10"></TableHead>
             </TableRow>
           </TableHeader>
@@ -60,7 +63,7 @@ export function ExpiringContractsList({
                   </div>
                 </TableCell>
                 <TableCell className="text-sm text-foreground py-2">
-                  {formatDaysLeft(contract.daysLeft)}
+                  {contract.daysLeft < 0 ? t('status.expired') : formatDaysLeft(contract.daysLeft, t)}
                 </TableCell>
                 <TableCell className="text-right py-2">
                   <button className="w-8 h-8 flex items-center justify-center rounded-md border border-input bg-background hover:bg-accent transition-colors">

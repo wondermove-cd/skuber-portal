@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   LayoutDashboard,
   UsersRound,
@@ -9,7 +10,7 @@ import {
   Settings,
   LogOut,
 } from 'lucide-react';
-import logoSvg from '@/asset/Sidebar/logo.svg';
+import logoSvg from '@/asset/logo.svg';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,27 +32,27 @@ import { getInitials } from '@/lib/utils/format';
 
 const wmMenuItems = [
   {
-    name: 'Dashboard',
+    translationKey: 'nav.dashboard',
     path: '/dashboard',
     icon: LayoutDashboard,
   },
   {
-    name: 'Customers',
+    translationKey: 'nav.customers',
     path: '/customers',
     icon: UsersRound,
   },
   {
-    name: 'Contracts',
+    translationKey: 'nav.contracts',
     path: '/contracts',
     icon: FilePenLine,
   },
   {
-    name: 'Payments',
+    translationKey: 'nav.payments',
     path: '/payments',
     icon: DollarSign,
   },
   {
-    name: 'Reseller',
+    translationKey: 'nav.resellers',
     path: '/reseller',
     icon: Handshake,
   },
@@ -59,23 +60,23 @@ const wmMenuItems = [
 
 const resellerMenuItems = [
   {
-    name: 'Dashboard',
+    translationKey: 'nav.dashboard',
     path: '/dashboard',
     icon: LayoutDashboard,
   },
   {
-    name: 'Customers',
+    translationKey: 'nav.customers',
     path: '/customers',
     icon: UsersRound,
   },
   {
-    name: 'Contracts',
+    translationKey: 'nav.contracts',
     path: '/contracts',
     icon: FilePenLine,
   },
   {
-    name: 'My Payments',
-    path: '/payments',
+    translationKey: 'nav.myPayments',
+    path: '/my-payments',
     icon: DollarSign,
   },
 ];
@@ -83,6 +84,7 @@ const resellerMenuItems = [
 export function Sidebar() {
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
 
   if (!user) return null;
@@ -114,7 +116,7 @@ export function Sidebar() {
         <ul className="space-y-1">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = location.pathname === item.path;
+            const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
 
             return (
               <li key={item.path}>
@@ -131,7 +133,7 @@ export function Sidebar() {
                   `}
                 >
                   <Icon className="w-5 h-5" />
-                  <span>{item.name}</span>
+                  <span>{t(item.translationKey)}</span>
                 </Link>
               </li>
             );
@@ -163,9 +165,9 @@ export function Sidebar() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" alignOffset={-16} className="w-56 mb-4">
             <DropdownMenuItem asChild className="cursor-pointer">
-              <Link to="/setting" className="flex items-center">
+              <Link to="/settings" className="flex items-center">
                 <Settings className="w-4 h-4 mr-2" />
-                <span>Setting</span>
+                <span>{t('nav.settings')}</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleLogoutClick} className="cursor-pointer">

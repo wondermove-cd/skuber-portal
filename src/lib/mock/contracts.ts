@@ -1,5 +1,7 @@
 export interface Contract {
   id: string;
+  contractNumber?: string; // Auto-generated contract number (CT-YYYYMMDD-XXXX)
+  contractId?: string; // Same as contractNumber for display
   companyName: string;
   reseller: string;
   resellerId?: string; // null/undefined means direct WM contract
@@ -7,7 +9,8 @@ export interface Contract {
   pricingModel: string;
   startDate: string;
   endDate: string;
-  status: 'active' | 'inactive';
+  status: 'active' | 'inactive' | 'expired';
+  createdAtTimestamp?: number; // Timestamp for "New" badge
 }
 
 export const mockContracts: Contract[] = [
@@ -32,6 +35,7 @@ export const mockContracts: Contract[] = [
     startDate: '2025. 10. 11',
     endDate: '2026. 10. 11',
     status: 'active',
+    createdAtTimestamp: Date.now() - (30 * 24 * 60 * 60 * 1000), // 30 days ago
   },
   {
     id: '3',
@@ -43,6 +47,7 @@ export const mockContracts: Contract[] = [
     startDate: '2025. 09. 11',
     endDate: '2026. 09. 11',
     status: 'active',
+    createdAtTimestamp: Date.now() - (60 * 24 * 60 * 60 * 1000), // 60 days ago
   },
   {
     id: '4',
@@ -230,5 +235,118 @@ export const mockContracts: Contract[] = [
     startDate: '2024. 11. 30',
     endDate: '2025. 11. 30',
     status: 'active',
+  },
+  // Reseller submitted contracts
+  {
+    id: 'C-1001',
+    contractId: 'C-1001',
+    companyName: 'Leadingpoint',
+    reseller: 'Megazone',
+    resellerId: '1',
+    service: 'Optimization',
+    pricingModel: 'Fixed Rate',
+    startDate: '2024. 12. 31',
+    endDate: '2025. 12. 31',
+    status: 'inactive',
+    approvalStatus: 'pending',
+    submittedDate: '2025. 01. 15',
+  },
+  {
+    id: 'C-1002',
+    contractId: 'C-1002',
+    companyName: 'Samsung Electronics',
+    reseller: 'Megazone',
+    resellerId: '1',
+    service: 'Observability',
+    pricingModel: 'Pay-as-you-go',
+    startDate: '2024. 12. 31',
+    endDate: '',
+    status: 'active',
+    approvalStatus: 'approved',
+    submittedDate: '2025. 01. 10',
+  },
+  {
+    id: 'C-1003',
+    contractId: 'C-1003',
+    companyName: 'LG Corporation',
+    reseller: 'Megazone',
+    resellerId: '1',
+    service: 'Management',
+    pricingModel: 'Fixed Rate',
+    startDate: '2025. 01. 01',
+    endDate: '2028. 01. 01',
+    status: 'inactive',
+    approvalStatus: 'rejected',
+    submittedDate: '2024. 12. 20',
+  },
+  {
+    id: 'C-1004',
+    contractId: 'C-1004',
+    companyName: 'Kakao Corp',
+    reseller: 'Megazone',
+    resellerId: '1',
+    service: 'Optimization',
+    pricingModel: 'Fixed Rate',
+    startDate: '2025. 02. 01',
+    endDate: '2030. 02. 01',
+    status: 'active',
+    approvalStatus: 'approved',
+    submittedDate: '2025. 01. 25',
+  },
+  {
+    id: 'C-1005',
+    contractId: 'C-1005',
+    companyName: 'Naver Corp',
+    reseller: 'Megazone',
+    resellerId: '1',
+    service: 'Management',
+    pricingModel: 'Fixed Rate',
+    startDate: '2025. 03. 01',
+    endDate: '2027. 03. 01',
+    status: 'active',
+    approvalStatus: 'approved',
+    submittedDate: '2025. 02. 15',
+  },
+  {
+    id: 'C-1006',
+    contractId: 'C-1006',
+    companyName: 'Coupang',
+    reseller: 'Megazone',
+    resellerId: '1',
+    service: 'Observability',
+    pricingModel: 'Trial',
+    startDate: '2025. 03. 10',
+    endDate: '2025. 04. 09',
+    status: 'active',
+    approvalStatus: 'approved',
+    submittedDate: '2025. 03. 05',
+  },
+  {
+    id: 'C-1007',
+    contractId: 'C-1007',
+    companyName: 'Baemin',
+    reseller: 'Megazone',
+    resellerId: '1',
+    service: 'Optimization',
+    pricingModel: 'Fixed Rate',
+    startDate: '2025. 04. 01',
+    endDate: '2026. 04. 01',
+    status: 'inactive',
+    approvalStatus: 'cancelled',
+    submittedDate: '2025. 03. 20',
+  },
+  {
+    id: 'C-1008',
+    contractId: 'C-1008',
+    companyName: 'Kakao Corp',
+    reseller: 'Megazone',
+    resellerId: '1',
+    service: 'Observability',
+    pricingModel: 'Pay-as-you-go',
+    startDate: '2025. 01. 15',
+    endDate: '',
+    status: 'inactive',
+    approvalStatus: 'rejected',
+    submittedDate: '2025. 01. 10',
   },
 ];

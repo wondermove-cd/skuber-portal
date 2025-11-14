@@ -1,5 +1,6 @@
 import { UsersRound, FileText, DollarSign, CircleCheckBig } from 'lucide-react';
 import { useOutletContext } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Header } from '@/components/layout/Header';
 import { StatsCard } from '@/components/dashboard/StatsCard';
 import { NextSettlementNotice } from '@/components/dashboard/NextSettlementNotice';
@@ -62,6 +63,7 @@ const mockExpiringContracts = [
 
 export function ResellerDashboardPage() {
   const { onToggleSidebar, onOpenNotifications } = useOutletContext<DashboardLayoutContext>();
+  const { t } = useTranslation();
 
   return (
     <div className="flex flex-col h-full bg-background">
@@ -71,41 +73,41 @@ export function ResellerDashboardPage() {
       />
       <div className="flex-1 p-8 bg-background flex flex-col gap-6">
         {/* Dashboard Title */}
-        <h1 className="text-2xl font-semibold text-foreground">Dashboard</h1>
+        <h1 className="text-2xl font-semibold text-foreground">{t('dashboard.title')}</h1>
 
         {/* Stats Cards Grid */}
         <div className="grid grid-cols-4 gap-6">
           <StatsCard
-            title="Total Customers"
+            title={t('dashboard.totalCustomers')}
             value={mockResellerStats.totalCustomers.value}
             change={mockResellerStats.totalCustomers.change}
             changeType={mockResellerStats.totalCustomers.changeType}
-            changeLabel={mockResellerStats.totalCustomers.label}
+            changeLabel={t('dashboard.fromLastMonth')}
             icon={UsersRound}
           />
           <StatsCard
-            title="Active Contracts"
+            title={t('dashboard.activeContracts')}
             value={mockResellerStats.activeContracts.value}
             change={mockResellerStats.activeContracts.change}
             changeType={mockResellerStats.activeContracts.changeType}
-            changeLabel={mockResellerStats.activeContracts.label}
+            changeLabel={t('dashboard.fromLastMonth')}
             icon={FileText}
           />
           <StatsCard
-            title="Monthly Settlement"
+            title={t('dashboard.monthlySettlement')}
             value={mockResellerStats.monthlySettlement.value}
             change={mockResellerStats.monthlySettlement.change}
             changeType={mockResellerStats.monthlySettlement.changeType}
-            changeLabel={mockResellerStats.monthlySettlement.label}
+            changeLabel={t('dashboard.fromLastMonth')}
             isCurrency
             icon={DollarSign}
           />
           <StatsCard
-            title="Monthly Expirations"
+            title={t('dashboard.monthlyExpirations')}
             value={mockResellerStats.monthlyExpirations.value}
             change={mockResellerStats.monthlyExpirations.change}
             changeType={mockResellerStats.monthlyExpirations.changeType}
-            changeLabel={mockResellerStats.monthlyExpirations.label}
+            changeLabel={t('dashboard.fromLastMonth')}
             icon={CircleCheckBig}
           />
         </div>

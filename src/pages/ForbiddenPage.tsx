@@ -1,4 +1,5 @@
 import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { Header } from '@/components/layout/Header';
 
@@ -8,6 +9,7 @@ interface DashboardLayoutContext {
 }
 
 export function ForbiddenPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -44,10 +46,10 @@ export function ForbiddenPage() {
           <div className="flex flex-col gap-4 items-center w-full">
             <div className="flex flex-col gap-2 items-center text-center w-full">
               <p className="text-lg font-medium leading-7 text-foreground">
-                403 - Forbidden
+                {t('errors.forbidden.title')}
               </p>
               <p className="text-sm font-normal leading-[1.625] text-muted-foreground">
-                You don't have permission to view this page.Please contact your administrator.
+                {t('errors.forbidden.description')}
               </p>
             </div>
           </div>
@@ -56,7 +58,7 @@ export function ForbiddenPage() {
               onClick={handleBackToDashboard}
               className="h-9 px-4 py-2 flex items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
             >
-              {user ? 'Back to Dashboard' : 'Go to Login'}
+              {user ? t('errors.forbidden.backToDashboard') : t('errors.forbidden.goToLogin')}
             </button>
           </div>
         </div>

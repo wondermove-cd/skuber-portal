@@ -1,5 +1,5 @@
 import { LoginForm } from '@/components/features/auth/LoginForm';
-import logoSvg from '@/asset/Sidebar/logo.svg';
+import logoSvg from '@/asset/logo.svg';
 
 export function LoginPage() {
   return (

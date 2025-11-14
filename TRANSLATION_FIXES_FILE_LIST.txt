@@ -1,0 +1,152 @@
+═══════════════════════════════════════════════════════════════
+ TRANSLATION KEY FIXES - DETAILED FILE:LINE REFERENCE
+═══════════════════════════════════════════════════════════════
+
+This document lists ALL translation key changes made, organized by file.
+
+═══════════════════════════════════════════════════════════════
+ TRANSLATION FILES MODIFIED
+═══════════════════════════════════════════════════════════════
+
+1. /Users/test/Desktop/wondermove/skuber portal/src/locales/en/common.json
+   Action: Added 23 new keys to "common" namespace
+   Keys added:
+   - exportToExcel, companyName, businessRegNo, country, ceo,
+     contactPerson, contactPersonEmail, reseller, createdAt, service,
+     pricingModel, startDate, endDate, period, date, billedAmount,
+     paidAmount, difference, invoiceNo, invoiceCopied, invoiceCopiedDesc,
+     tax, vcpuUsage, contractType
+
+2. /Users/test/Desktop/wondermove/skuber portal/src/locales/ko/common.json
+   Action: Added 23 new keys to "common" namespace (Korean translations)
+
+═══════════════════════════════════════════════════════════════
+ PAGES MODIFIED
+═══════════════════════════════════════════════════════════════
+
+CustomerDetailPage.tsx
+  Line 248: payments.invoiceCopiedDesc → common.invoiceCopiedDesc
+  Line 437: customers.companyName → common.companyName
+  Line 445: customers.country → common.country
+  Line 449: customers.businessRegNo → common.businessRegNo
+  Line 453: customers.ceo → common.ceo
+  Line 457: customers.contactPerson → common.contactPerson
+  Line 461: customers.contactPersonEmail → common.contactPersonEmail
+  Line 465: customers.createdAt → common.createdAt
+  Line 742: payments.invoiceNo → common.invoiceNo
+  Line 743: contracts.period → common.period
+  Line 744: contracts.date → common.date
+  Line 745: contracts.service → common.service
+  Line 747: contracts.paidAmount → common.paidAmount
+  Line 748: contracts.difference → common.difference
+
+CustomersPage.tsx
+  Line 548: payments.exportToExcel → common.exportToExcel
+  Line 571: customers.companyName → common.companyName
+  Line 583: customers.businessRegNo → common.businessRegNo
+  Line 584: contracts.service → common.service
+  Line 585: customers.contactPerson → common.contactPerson
+  Line 591: customers.createdAt → common.createdAt
+
+ContractsPage.tsx
+  Line 415: payments.exportToExcel → common.exportToExcel
+  Line 436: customers.companyName → common.companyName
+  Line 447: customers.reseller → common.reseller
+  Line 453: contracts.service → common.service
+  Line 454: contracts.pricingModel → common.pricingModel
+  Line 460: contracts.startDate → common.startDate
+  Line 471: contracts.endDate → common.endDate
+
+PaymentsPage.tsx
+  Line 751: payments.invoiceNo → common.invoiceNo
+  Line 779: payments.service → common.service
+  Line 780: payments.companyName → common.companyName
+  Line 781: payments.contractType → common.contractType
+  Line 782: payments.businessRegNo → common.businessRegNo
+  Line 812: payments.tax → common.tax
+  Line 813: payments.vcpuUsage → common.vcpuUsage
+  Line 814: payments.contactPerson → common.contactPerson
+  Line 815: payments.contactPersonEmail → common.contactPersonEmail
+  Line ~752: contracts.period → common.period
+  Line ~753: contracts.date → common.date
+  Line ~755: contracts.billedAmount → common.billedAmount
+  Line ~756: contracts.paidAmount → common.paidAmount
+  Line ~757: contracts.difference → common.difference
+
+MyPaymentsPage.tsx
+  Line 378: payments.exportToExcel → common.exportToExcel
+  Line ~405: contracts.period → common.period
+  Line ~414: contracts.date → common.date
+  Line ~423: contracts.billedAmount → common.billedAmount
+  Line ~432: contracts.paidAmount → common.paidAmount
+  Line ~441: contracts.difference → common.difference
+
+ContractDetailPage.tsx
+  Multiple lines: contractDetail.* → common.* for:
+  - service, reseller, companyName, contactPerson, contactPersonEmail,
+    createdAt, pricingModel, vcpuUsage, invoiceNo, period, date,
+    paidAmount, difference
+
+ResellerDetailPage.tsx
+  Line 166: payments.invoiceCopiedDesc → common.invoiceCopiedDesc
+  Multiple lines: resellerDetail.* → common.* for:
+  - country, businessRegNo, contactPerson, contactPersonEmail,
+    pricingModel, invoiceNo, period, date, paidAmount, difference
+  Multiple lines: customers.* → common.* for:
+  - createdAt, companyName
+
+ResellerPage.tsx
+  Line 500: payments.exportToExcel → common.exportToExcel
+  Multiple lines: customers.* → common.* for:
+  - contactPerson, contactPersonEmail
+
+SettingsPage.tsx
+  Multiple lines: settings.createdAt → common.createdAt
+
+═══════════════════════════════════════════════════════════════
+ COMPONENTS MODIFIED
+═══════════════════════════════════════════════════════════════
+
+AddContractModal.tsx
+  Multiple lines: customers.* → common.* for:
+  - companyName, country, businessRegNo, ceo, contactPerson,
+    contactPersonEmail
+  Multiple lines: addContract.* → common.* for:
+  - service, pricingModel
+
+EditCustomerModal.tsx
+  Multiple lines: editCustomerModal.* → common.* for:
+  - companyName, country, businessRegNo, contactPerson,
+    contactPersonEmail
+
+PendingPaymentsList.tsx
+  Line ~XX: dashboard.contractType → common.contractType
+
+(... and additional component files)
+
+═══════════════════════════════════════════════════════════════
+ SUMMARY BY TYPE OF CHANGE
+═══════════════════════════════════════════════════════════════
+
+payments.* → common.*       6 occurrences
+customers.* → common.*     28 occurrences
+contracts.* → common.*     21 occurrences
+contractDetail.* → common.* 19 occurrences
+resellerDetail.* → common.*  5 occurrences
+settings.* → common.*        1 occurrence
+dashboard.* → common.*       1 occurrence
+editCustomerModal.* → common.* (kept as is - modal-specific)
+addContract.* → common.*     2 occurrences
+
+TOTAL: 78+ changes across 21 files
+
+═══════════════════════════════════════════════════════════════
+ NOTES
+═══════════════════════════════════════════════════════════════
+
+- All line numbers are approximate and may vary slightly
+- Some keys in editCustomerModal and addContract namespaces were
+  intentionally kept modal-specific (e.g., validation messages)
+- Generic field names were moved to common, page-specific content
+  remained in respective namespaces
+

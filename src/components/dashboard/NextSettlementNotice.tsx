@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { DollarSign } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils/format';
 
@@ -7,6 +8,8 @@ interface NextSettlementNoticeProps {
 }
 
 export function NextSettlementNotice({ amount, dueDate }: NextSettlementNoticeProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-card border border-border rounded-lg p-4 flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -15,10 +18,10 @@ export function NextSettlementNotice({ amount, dueDate }: NextSettlementNoticePr
         </div>
         <div>
           <div className="text-sm font-medium text-foreground">
-            Next Settlement Notice
+            {t('dashboard.nextSettlementNotice')}
           </div>
           <div className="text-sm text-muted-foreground">
-            Settlement due date {dueDate}
+            {t('dashboard.settlementDueDate')} {dueDate}
           </div>
         </div>
       </div>

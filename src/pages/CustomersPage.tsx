@@ -1,11 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Search, Filter, Download, Plus, MoreVertical, FileText, StickyNote, Trash2, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ArrowUpDown, ArrowUp, ArrowDown, UserRound, X } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
 import * as XLSX from 'xlsx';
 import { Header } from '@/components/layout/Header';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { mockCustomers, mockCustomerContracts, Customer } from '@/lib/mock/customers';
+import { Customer } from '@/lib/mock/customers';
+import {
+  getAllCustomers,
+  saveCustomer,
+  deleteCustomer,
+  saveCustomerNote,
+  getCustomerContracts,
+} from '@/lib/data-store';
 import { COUNTRIES } from '@/lib/constants/countries';
 import { validateBusinessRegNo } from '@/lib/utils/validators';
 import {
@@ -52,6 +61,9 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
+import { AddContractModal } from '@/components/contracts/AddContractModal';
+import { AddNoteModal } from '@/components/customers/AddNoteModal';
+import { CustomerNote } from '@/lib/mock/customers';
 
 interface DashboardLayoutContext {
   onToggleSidebar: () => void;
@@ -61,6 +73,8 @@ interface DashboardLayoutContext {
 export function CustomersPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useTranslation();
+  const { toast } = useToast();
   const { onToggleSidebar, onOpenNotifications } = useOutletContext<DashboardLayoutContext>();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -81,6 +95,7 @@ export function CustomersPage() {
     ceoName: '',
     contactPerson: '',
     contactEmail: '',
+    note: '',
   });
   const [formErrors, setFormErrors] = useState<{
     countryCode?: string;
@@ -91,51 +106,37 @@ export function CustomersPage() {
     contactEmail?: string;
   }>({});
   const [addContractAfter, setAddContractAfter] = useState(true);
+  const [contractModalOpen, setContractModalOpen] = useState(false);
+  const [contractCustomerId, setContractCustomerId] = useState<string>('');
+  const [noteModalOpen, setNoteModalOpen] = useState(false);
+  const [noteCustomerId, setNoteCustomerId] = useState<string>('');
 
-  // Initialize customers from localStorage or use mockCustomers
-  const [customers, setCustomers] = useState<Customer[]>(() => {
-    const stored = localStorage.getItem('customers');
-    if (stored) {
-      try {
-        const parsedCustomers = JSON.parse(stored);
-        // Check if the data has resellerId field (new schema)
-        if (parsedCustomers.length > 0 && !('resellerId' in parsedCustomers[0])) {
-          // Old data without resellerId, use fresh mockCustomers
-          console.log('Detected old customer data schema, loading fresh data');
-          return mockCustomers;
-        }
-        return parsedCustomers;
-      } catch (e) {
-        console.error('Failed to parse customers from localStorage:', e);
-        return mockCustomers;
-      }
-    }
-    return mockCustomers;
-  });
+  // Initialize customers from data store
+  const [customers, setCustomers] = useState<Customer[]>(() => getAllCustomers());
 
-  const { toast } = useToast();
-
-  // Sync customers to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('customers', JSON.stringify(customers));
-  }, [customers]);
+  // Function to reload customers from data store
+  const reloadCustomers = () => {
+    setCustomers(getAllCustomers());
+  };
 
   // Listen for localStorage changes from other tabs/windows
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'customers' && e.newValue) {
-        try {
-          const updatedCustomers = JSON.parse(e.newValue);
-          setCustomers(updatedCustomers);
-        } catch (error) {
-          console.error('Failed to parse customers from storage event:', error);
-        }
+        reloadCustomers();
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
+
+  // Reload customers when contract modal closes
+  useEffect(() => {
+    if (!contractModalOpen) {
+      reloadCustomers();
+    }
+  }, [contractModalOpen]);
 
   // Permission checks
   const canDelete = user?.role === 'wm_admin';
@@ -258,6 +259,7 @@ export function CustomersPage() {
       ceoName: '',
       contactPerson: '',
       contactEmail: '',
+      note: '',
     });
     setFormErrors({});
     setAddContractAfter(true);
@@ -309,16 +311,22 @@ export function CustomersPage() {
 
     // Create new customer
     const newCustomer: Customer = {
-      id: String(customers.length + 1),
+      id: `customer-${Date.now()}`,
       companyName: customerFormData.companyName,
       businessRegNo: customerFormData.businessRegNo,
       services: [], // Empty services initially
       contactPerson: customerFormData.contactPerson,
+      email: customerFormData.contactEmail,
+      country: selectedCountry?.name || customerFormData.countryCode,
+      ceo: customerFormData.ceoName,
       createdAt: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
+      createdAtTimestamp: Date.now(),
+      resellerId: isResellerUser ? user?.resellerId : undefined, // Set resellerId for reseller users
     };
 
-    // Add to customers list
-    setCustomers([newCustomer, ...customers]);
+    // Save to data store
+    saveCustomer(newCustomer);
+    reloadCustomers();
 
     // Show success toast
     toast({
@@ -329,9 +337,29 @@ export function CustomersPage() {
     setAddCustomerDialogOpen(false);
 
     if (addContractAfter) {
-      // TODO: Navigate to add contract flow (to be implemented)
-      console.log('Navigate to add contract flow');
+      // Open contract modal at step 3 with the new customer
+      setContractCustomerId(newCustomer.id);
+      setContractModalOpen(true);
     }
+  };
+
+  // Handler for adding customer from within AddContractModal
+  const handleAddCustomerFromContract = (customer: Omit<Customer, 'id' | 'createdAt' | 'services' | 'resellerId'>) => {
+    // Note: Customer is already saved in AddContractModal via saveCustomer
+    // This handler is just for reloading data
+    reloadCustomers();
+
+    toast({
+      title: 'Success',
+      description: 'Customer created successfully',
+    });
+  };
+
+  // Check if customer is new (created within last 7 days)
+  const isNewCustomer = (customer: Customer) => {
+    if (!customer.createdAtTimestamp) return false;
+    const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+    return customer.createdAtTimestamp > sevenDaysAgo;
   };
 
   // Filter customers based on role, search and service filter
@@ -381,7 +409,8 @@ export function CustomersPage() {
   const currentCustomers = filteredCustomers.slice(startIndex, endIndex);
 
   const handleDelete = (customer: Customer) => {
-    const contractCount = mockCustomerContracts[customer.id] || 0;
+    const contracts = getCustomerContracts(customer.id);
+    const contractCount = contracts.length;
 
     if (contractCount > 0) {
       setDeleteError({ customer, contractCount });
@@ -392,8 +421,9 @@ export function CustomersPage() {
 
   const confirmDelete = () => {
     if (deleteConfirm) {
-      // Remove customer from state
-      setCustomers(customers.filter(c => c.id !== deleteConfirm.id));
+      // Remove customer from data store
+      deleteCustomer(deleteConfirm.id);
+      reloadCustomers();
 
       toast({
         title: 'Success',
@@ -402,6 +432,34 @@ export function CustomersPage() {
 
       setDeleteConfirm(null);
     }
+  };
+
+  const handleAddNote = (content: string) => {
+    if (!noteCustomerId) return;
+
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formattedDate = `${year}. ${month}. ${day}`;
+
+    const newNote: CustomerNote = {
+      id: `note-${Date.now()}`,
+      customerId: noteCustomerId,
+      content,
+      author: user?.name || 'Unknown',
+      createdAt: formattedDate,
+    };
+
+    // Save note to data store
+    saveCustomerNote(newNote);
+
+    toast({
+      title: 'Note Added',
+      description: 'Your note has been added successfully',
+    });
+
+    setNoteCustomerId('');
   };
 
   const handleExportToExcel = () => {
@@ -448,14 +506,14 @@ export function CustomersPage() {
 
       <div className="flex-1 p-8 overflow-auto">
         {/* Page Title */}
-        <h1 className="text-2xl font-semibold text-foreground mb-6">Customers</h1>
+        <h1 className="text-2xl font-semibold text-foreground mb-6">{t('customers.title')}</h1>
 
         {/* Search and Actions Bar */}
         <div className="flex items-center justify-between mb-4">
           {/* Search */}
           <div className="flex items-center w-full max-w-[320px] h-9 border border-input rounded-md bg-card">
             <Input
-              placeholder="Search..."
+              placeholder={`${t('common.search')}...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1 border-0 rounded-l-md h-full focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -474,7 +532,7 @@ export function CustomersPage() {
             <div className="relative">
               <Button variant="outline" className="h-9 px-3 text-xs gap-2 bg-card" onClick={handleFilterOpen}>
                 <Filter className="w-4 h-4" />
-                Filter
+                {t('common.filter')}
               </Button>
               {appliedServices.length > 0 && (
                 <Badge
@@ -489,14 +547,14 @@ export function CustomersPage() {
             {/* Export to Excel */}
             <Button variant="outline" className="h-9 px-3 text-xs gap-2 bg-card" onClick={handleExportToExcel}>
               <Download className="w-4 h-4" />
-              Export to Excel
+              {t('common.exportToExcel')}
             </Button>
 
             {/* Add Customer */}
             {canAdd && (
               <Button className="h-9 px-3 text-xs gap-2" onClick={handleAddCustomerOpen}>
                 <Plus className="w-4 h-4" />
-                Add Customer
+                {t('customers.addCustomer')}
               </Button>
             )}
           </div>
@@ -512,7 +570,7 @@ export function CustomersPage() {
                     onClick={() => handleSort('companyName')}
                     className="flex items-center gap-1"
                   >
-                    Company Name
+                    {t('common.companyName')}
                     {sortBy === 'companyName' ? (
                       sortOrder === 'asc' ? (
                         <ArrowUp className="w-3 h-3" />
@@ -524,15 +582,15 @@ export function CustomersPage() {
                     )}
                   </button>
                 </TableHead>
-                <TableHead className="font-medium w-[18%]">Business Reg. No.</TableHead>
-                <TableHead className="font-medium w-[34%]">Service</TableHead>
-                <TableHead className="font-medium w-[16%]">Contact Person</TableHead>
+                <TableHead className="font-medium w-[18%]">{t('common.businessRegNo')}</TableHead>
+                <TableHead className="font-medium w-[34%]">{t('common.service')}</TableHead>
+                <TableHead className="font-medium w-[16%]">{t('common.contactPerson')}</TableHead>
                 <TableHead className="font-medium w-[13%]">
                   <button
                     onClick={() => handleSort('createdAt')}
                     className="flex items-center gap-1"
                   >
-                    Created At
+                    {t('common.createdAt')}
                     {sortBy === 'createdAt' ? (
                       sortOrder === 'asc' ? (
                         <ArrowUp className="w-3 h-3" />
@@ -557,23 +615,16 @@ export function CustomersPage() {
                           <UserRound className="w-6 h-6 text-foreground" />
                         </div>
                         <div className="flex flex-col gap-2">
-                          <p className="text-lg font-medium text-foreground leading-7">No customers yet</p>
+                          <p className="text-lg font-medium text-foreground leading-7">{t('customers.noCustomers')}</p>
                           <p className="text-sm text-muted-foreground leading-[1.625]">
-                            {canAdd ? (
-                              <>
-                                You haven't registered any customers yet.<br />
-                                Start by adding your first customer.
-                              </>
-                            ) : (
-                              'No customers have been registered yet.'
-                            )}
+                            {t('customers.noCustomersDesc')}
                           </p>
                         </div>
                       </div>
                       {canAdd && (
                         <div className="flex items-center justify-center">
                           <Button className="h-9 px-4 text-sm gap-2" onClick={handleAddCustomerOpen}>
-                            Add Customer
+                            {t('customers.addCustomer')}
                           </Button>
                         </div>
                       )}
@@ -600,9 +651,20 @@ export function CustomersPage() {
                 </TableRow>
               ) : (
                 currentCustomers.map((customer) => (
-                <TableRow key={customer.id} className="h-14">
+                <TableRow
+                  key={customer.id}
+                  className="h-14 cursor-pointer hover:bg-accent/50"
+                  onClick={() => navigate(`/customers/${customer.id}`)}
+                >
                   <TableCell className="font-medium overflow-hidden text-ellipsis whitespace-nowrap">
-                    {customer.companyName}
+                    <div className="flex items-center gap-2">
+                      <span>{customer.companyName}</span>
+                      {isNewCustomer(customer) && (
+                        <Badge variant="default" className="h-4 px-1 text-[10px] font-bold bg-primary">
+                          N
+                        </Badge>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell className="overflow-hidden text-ellipsis whitespace-nowrap">
                     {customer.businessRegNo}
@@ -627,7 +689,7 @@ export function CustomersPage() {
                     {customer.createdAt}
                   </TableCell>
                   {showActionsColumn && (
-                    <TableCell className="text-right">
+                    <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-accent ml-auto">
@@ -636,15 +698,21 @@ export function CustomersPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           {canAddContract && (
-                            <DropdownMenuItem onClick={() => navigate(`/customers/${customer.id}/contracts/new`)}>
+                            <DropdownMenuItem onClick={() => {
+                              setContractCustomerId(customer.id);
+                              setContractModalOpen(true);
+                            }}>
                               <FileText className="mr-2 h-4 w-4" />
-                              Add Contract
+                              {t('customers.addContract')}
                             </DropdownMenuItem>
                           )}
                           {canAddNote && (
-                            <DropdownMenuItem onClick={() => console.log('Add note for customer:', customer.id)}>
+                            <DropdownMenuItem onClick={() => {
+                              setNoteCustomerId(customer.id);
+                              setNoteModalOpen(true);
+                            }}>
                               <StickyNote className="mr-2 h-4 w-4" />
-                              Add Note
+                              {t('customers.addNote')}
                             </DropdownMenuItem>
                           )}
                           {canDelete && (
@@ -655,7 +723,7 @@ export function CustomersPage() {
                                 onClick={() => handleDelete(customer)}
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
+                                {t('common.delete')}
                               </DropdownMenuItem>
                             </>
                           )}
@@ -674,7 +742,7 @@ export function CustomersPage() {
         {filteredCustomers.length > 0 && (
         <div className="flex items-center justify-between mt-4">
           <div className="flex items-center gap-2 text-sm text-foreground">
-            <span className="font-medium">Rows per page</span>
+            <span className="font-medium">{t('common.rowsPerPage')}</span>
             <Select
               value={rowsPerPage.toString()}
               onValueChange={(value) => {
@@ -696,7 +764,7 @@ export function CustomersPage() {
 
           <div className="flex items-center gap-8">
             <span className="text-sm text-foreground font-medium">
-              Page {currentPage} of {totalPages}
+              {t('settings.page')} {currentPage} {t('settings.of')} {totalPages}
             </span>
             <div className="flex items-center gap-2">
               <Button
@@ -852,7 +920,7 @@ export function CustomersPage() {
 
       {/* Add Customer Dialog */}
       <Dialog open={addCustomerDialogOpen} onOpenChange={setAddCustomerDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-[425px] gap-8 p-6">
           <button
             onClick={handleAddCustomerClose}
             className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
@@ -860,15 +928,19 @@ export function CustomersPage() {
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
           </button>
-          <DialogHeader>
-            <DialogTitle className="text-lg font-semibold">Add Customer</DialogTitle>
+          <DialogHeader className="gap-1.5">
+            <DialogTitle className="text-lg font-semibold leading-none">
+              {t('customers.addCustomer')}
+            </DialogTitle>
           </DialogHeader>
 
-          <form onSubmit={handleCustomerSubmit} className="flex flex-col gap-5">
+          {/* Scrollable form area */}
+          <div className="max-h-[calc(100vh-280px)] overflow-y-auto px-1">
+            <form id="customer-form" onSubmit={handleCustomerSubmit} className="flex flex-col gap-5">
             {/* Company Name */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               <Label htmlFor="companyName" className="text-sm font-medium">
-                Company Name
+                {t('customers.companyName')}
               </Label>
               <Input
                 id="companyName"
@@ -876,18 +948,18 @@ export function CustomersPage() {
                 onChange={(e) => handleCustomerInputChange('companyName', e.target.value)}
                 onBlur={() => handleFieldBlur('companyName')}
                 className="h-9"
-                placeholder="Leadingpoint"
+                placeholder={t('customers.enterCompanyName')}
                 aria-invalid={!!formErrors.companyName}
               />
               {formErrors.companyName && (
-                <p className="text-sm text-destructive">{formErrors.companyName}</p>
+                <p className="text-sm text-destructive -mt-1">{formErrors.companyName}</p>
               )}
             </div>
 
             {/* Country */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               <Label htmlFor="country" className="text-sm font-medium">
-                Country
+                {t('customers.country')}
               </Label>
               <Select
                 value={customerFormData.countryCode}
@@ -907,7 +979,7 @@ export function CustomersPage() {
                 }}
               >
                 <SelectTrigger className="h-9 w-full">
-                  <SelectValue placeholder="Select country..." />
+                  <SelectValue placeholder={t('common.selectCountry')} />
                 </SelectTrigger>
                 <SelectContent className="max-h-[240px]">
                   {COUNTRIES.map((country) => (
@@ -918,14 +990,14 @@ export function CustomersPage() {
                 </SelectContent>
               </Select>
               {formErrors.countryCode && (
-                <p className="text-sm text-destructive">{formErrors.countryCode}</p>
+                <p className="text-sm text-destructive -mt-1">{formErrors.countryCode}</p>
               )}
             </div>
 
             {/* Business Reg. No. */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               <Label htmlFor="businessRegNo" className="text-sm font-medium">
-                {selectedCountry?.businessRegNoLabel || 'Business Reg. No.'}
+                {selectedCountry?.businessRegNoLabel || t('customers.businessRegNo')}
               </Label>
               <Input
                 id="businessRegNo"
@@ -937,14 +1009,14 @@ export function CustomersPage() {
                 aria-invalid={!!formErrors.businessRegNo}
               />
               {formErrors.businessRegNo && (
-                <p className="text-sm text-destructive">{formErrors.businessRegNo}</p>
+                <p className="text-sm text-destructive -mt-1">{formErrors.businessRegNo}</p>
               )}
             </div>
 
             {/* CEO / Representative */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               <Label htmlFor="ceoName" className="text-sm font-medium">
-                CEO / Representative
+                {t('customers.ceo')}
               </Label>
               <Input
                 id="ceoName"
@@ -952,18 +1024,18 @@ export function CustomersPage() {
                 onChange={(e) => handleCustomerInputChange('ceoName', e.target.value)}
                 onBlur={() => handleFieldBlur('ceoName')}
                 className="h-9"
-                placeholder="Eddie Lake"
+                placeholder={t('customers.enterCeo')}
                 aria-invalid={!!formErrors.ceoName}
               />
               {formErrors.ceoName && (
-                <p className="text-sm text-destructive">{formErrors.ceoName}</p>
+                <p className="text-sm text-destructive -mt-1">{formErrors.ceoName}</p>
               )}
             </div>
 
             {/* Contact Person */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               <Label htmlFor="contactPerson" className="text-sm font-medium">
-                Contact Person
+                {t('customers.contactPerson')}
               </Label>
               <Input
                 id="contactPerson"
@@ -971,18 +1043,18 @@ export function CustomersPage() {
                 onChange={(e) => handleCustomerInputChange('contactPerson', e.target.value)}
                 onBlur={() => handleFieldBlur('contactPerson')}
                 className="h-9"
-                placeholder="Jamik Tashpulatov"
+                placeholder={t('customers.enterContactPerson')}
                 aria-invalid={!!formErrors.contactPerson}
               />
               {formErrors.contactPerson && (
-                <p className="text-sm text-destructive">{formErrors.contactPerson}</p>
+                <p className="text-sm text-destructive -mt-1">{formErrors.contactPerson}</p>
               )}
             </div>
 
             {/* Contact Person Email */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               <Label htmlFor="contactEmail" className="text-sm font-medium">
-                Contact Person Email
+                {t('resellers.contactEmail')}
               </Label>
               <Input
                 id="contactEmail"
@@ -991,44 +1063,94 @@ export function CustomersPage() {
                 onChange={(e) => handleCustomerInputChange('contactEmail', e.target.value)}
                 onBlur={() => handleFieldBlur('contactEmail')}
                 className="h-9"
-                placeholder="Eddie@leading.net"
+                placeholder={t('customers.enterEmail')}
                 aria-invalid={!!formErrors.contactEmail}
               />
               {formErrors.contactEmail && (
-                <p className="text-sm text-destructive">{formErrors.contactEmail}</p>
+                <p className="text-sm text-destructive -mt-1">{formErrors.contactEmail}</p>
               )}
             </div>
 
-            {/* Add Contract After Saving Checkbox */}
-            <div className="flex items-start gap-2 pt-1">
-              <Checkbox
-                id="add-contract-customer"
-                checked={addContractAfter}
-                onCheckedChange={(checked) => setAddContractAfter(checked === true)}
-              />
-              <Label
-                htmlFor="add-contract-customer"
-                className="text-sm font-medium cursor-pointer select-none"
-              >
-                Add contract after saving
+            {/* Note Field */}
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="note" className="text-sm font-medium">
+                {t('customers.note')}
               </Label>
+              <div className="relative border border-input rounded-md bg-background">
+                <Textarea
+                  id="note"
+                  value={customerFormData.note}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value.length <= 280) {
+                      handleCustomerInputChange('note', value);
+                    }
+                  }}
+                  className="min-h-[120px] resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 pb-10"
+                  placeholder={t('customers.enterNote')}
+                />
+                <div className="absolute bottom-0 left-0 right-0 px-3 py-3 text-sm text-muted-foreground">
+                  {customerFormData.note.length}/280 {t('customers.characters')}
+                </div>
+              </div>
             </div>
-
-            <DialogFooter className="flex items-center justify-end gap-2">
-              <Button type="button" variant="outline" className="h-9 px-4 text-sm" onClick={handleAddCustomerClose}>
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                className="h-9 px-4 text-sm"
-                disabled={!isCustomerFormValid()}
-              >
-                Submit
-              </Button>
-            </DialogFooter>
           </form>
+          </div>
+
+          {/* Fixed checkbox and footer */}
+          <div className="flex items-start gap-2 pt-1 pb-0">
+            <Checkbox
+              id="add-contract-customer"
+              checked={addContractAfter}
+              onCheckedChange={(checked) => setAddContractAfter(checked === true)}
+            />
+            <Label
+              htmlFor="add-contract-customer"
+              className="text-sm font-medium cursor-pointer select-none"
+            >
+              {t('common.addContractAfterSaving')}
+            </Label>
+          </div>
+
+          <DialogFooter className="flex items-center justify-end gap-2 sm:justify-end">
+            <Button type="button" variant="outline" className="h-9 px-4 text-sm" onClick={handleAddCustomerClose}>
+              {t('common.cancel')}
+            </Button>
+            <Button
+              type="submit"
+              form="customer-form"
+              className="h-9 px-4 text-sm"
+              disabled={!isCustomerFormValid()}
+            >
+              {t('common.submit')}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Add Contract Modal */}
+      <AddContractModal
+        open={contractModalOpen}
+        onOpenChange={setContractModalOpen}
+        customers={customers}
+        onAddCustomer={handleAddCustomerFromContract}
+        initialCustomerId={contractCustomerId}
+        initialStep={3}
+      />
+
+      {/* Add Note Modal */}
+      <AddNoteModal
+        open={noteModalOpen}
+        onOpenChange={(open) => {
+          setNoteModalOpen(open);
+          if (!open) {
+            setTimeout(() => {
+              setNoteCustomerId('');
+            }, 200);
+          }
+        }}
+        onAddNote={handleAddNote}
+      />
     </div>
   );
 }

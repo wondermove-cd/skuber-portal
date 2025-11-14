@@ -4,10 +4,17 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react"
-import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker"
+import { DayButton, DayPicker, getDefaultClassNames, DropdownProps } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 function Calendar({
   className,
@@ -35,7 +42,7 @@ function Calendar({
       captionLayout={captionLayout}
       formatters={{
         formatMonthDropdown: (date) =>
-          date.toLocaleString("default", { month: "short" }),
+          date.toLocaleString("en-US", { month: "short" }),
         ...formatters,
       }}
       classNames={{
@@ -68,18 +75,15 @@ function Calendar({
           defaultClassNames.dropdowns
         ),
         dropdown_root: cn(
-          "relative has-focus:border-ring border border-input shadow-xs has-focus:ring-ring/50 has-focus:ring-[3px] rounded-md",
+          "relative",
           defaultClassNames.dropdown_root
         ),
         dropdown: cn(
-          "absolute bg-popover inset-0 opacity-0",
+          "absolute inset-0 opacity-0 pointer-events-none",
           defaultClassNames.dropdown
         ),
         caption_label: cn(
-          "select-none font-medium",
-          captionLayout === "label"
-            ? "text-sm"
-            : "rounded-md pl-2 pr-1 flex items-center gap-1 text-sm h-8 [&>svg]:text-muted-foreground [&>svg]:size-3.5",
+          captionLayout === "dropdown" ? "hidden" : "select-none text-sm font-medium",
           defaultClassNames.caption_label
         ),
         table: "w-full border-collapse",
@@ -164,6 +168,55 @@ function Calendar({
                 {children}
               </div>
             </td>
+          )
+        },
+        Dropdown: (props: DropdownProps) => {
+          const { value, onChange, options } = props
+
+          const selected = options?.find((option) =>
+            option.value?.toString() === value?.toString()
+          )
+
+          const handleChange = (newValue: string) => {
+            const changeEvent = {
+              target: { value: newValue },
+            } as React.ChangeEvent<HTMLSelectElement>
+            onChange?.(changeEvent)
+          }
+
+          return (
+            <div className="relative z-10">
+              <Select value={value?.toString()} onValueChange={handleChange}>
+                <SelectTrigger
+                  size="sm"
+                  className="h-[34px] w-auto min-w-[58px] focus:ring-0 focus-visible:ring-0"
+                >
+                  {selected?.label ?? value}
+                </SelectTrigger>
+                <SelectContent
+                  position="popper"
+                  side="bottom"
+                  align="start"
+                  className="z-50 max-h-[300px] overflow-y-auto"
+                >
+                  {options?.map((option, id: number) => {
+                    const optionValue = option.value?.toString() ?? ""
+                    const optionLabel = option.label
+
+                    if (!optionValue) return null
+
+                    return (
+                      <SelectItem
+                        key={`${optionValue}-${id}`}
+                        value={optionValue}
+                      >
+                        {optionLabel}
+                      </SelectItem>
+                    )
+                  })}
+                </SelectContent>
+              </Select>
+            </div>
           )
         },
         ...components,

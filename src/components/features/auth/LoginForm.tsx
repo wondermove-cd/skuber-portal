@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,23 +24,29 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
-// Validation Schema
-const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, 'Email is required')
-    .email('Invalid email address'),
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters'),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+type LoginFormValues = {
+  email: string;
+  password: string;
+};
 
 export function LoginForm() {
+  const { t } = useTranslation();
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Validation Schema
+  const loginSchema = z.object({
+    email: z
+      .string()
+      .min(1, t('auth.login.emailRequired'))
+      .email(t('auth.login.invalidEmail')),
+    password: z
+      .string()
+      .min(8, t('auth.login.passwordMinLength')),
+  });
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -55,7 +63,7 @@ export function LoginForm() {
     try {
       await login(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
+      setError(err instanceof Error ? err.message : t('auth.login.loginFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -63,17 +71,17 @@ export function LoginForm() {
 
   const handleForgotPassword = (e: React.MouseEvent) => {
     e.preventDefault();
-    alert('Password reset feature is coming soon.');
+    navigate('/forgot-password');
   };
 
   return (
     <Card className="w-[384px] border-border">
       <CardHeader className="space-y-1.5 text-center px-12">
         <CardTitle className="text-xl font-semibold">
-          Login to your account
+          {t('auth.login.title')}
         </CardTitle>
         <CardDescription className="text-sm">
-          Enter your email below to login to your account
+          {t('auth.login.description')}
         </CardDescription>
       </CardHeader>
       <CardContent className="px-6">
@@ -85,12 +93,12 @@ export function LoginForm() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium">Email</FormLabel>
+                    <FormLabel className="text-sm font-medium">{t('auth.login.emailLabel')}</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="m@example.com"
-                        className="h-9 bg-input"
+                        placeholder={t('auth.login.emailPlaceholder')}
+                        className="h-9 bg-white"
                         disabled={isLoading}
                         {...field}
                       />
@@ -108,24 +116,38 @@ export function LoginForm() {
                     <FormItem>
                       <div className="flex items-center justify-between">
                         <FormLabel className="text-sm font-medium">
-                          Password
+                          {t('auth.login.passwordLabel')}
                         </FormLabel>
                         <button
                           type="button"
                           onClick={handleForgotPassword}
                           className="text-sm text-foreground hover:underline"
                         >
-                          Forgot your password?
+                          {t('auth.login.forgotPassword')}
                         </button>
                       </div>
                       <FormControl>
-                        <Input
-                          type="password"
-                          placeholder=""
-                          className="h-9 bg-input"
-                          disabled={isLoading}
-                          {...field}
-                        />
+                        <div className="relative">
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder={t('auth.login.passwordPlaceholder')}
+                            className="h-9 bg-white pr-10"
+                            disabled={isLoading}
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-0 top-0 h-9 px-3 flex items-center text-muted-foreground hover:text-foreground transition-colors"
+                            tabIndex={-1}
+                          >
+                            {showPassword ? (
+                              <Eye className="h-4 w-4" />
+                            ) : (
+                              <EyeOff className="h-4 w-4" />
+                            )}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -149,10 +171,10 @@ export function LoginForm() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Logging in...
+                    {t('auth.login.loggingIn')}
                   </>
                 ) : (
-                  'Login'
+                  t('auth.login.loginButton')
                 )}
               </Button>
             </div>

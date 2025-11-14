@@ -5,7 +5,44 @@ export interface Customer {
   services: string[];
   contactPerson: string;
   createdAt: string;
+  createdAtTimestamp?: number; // Timestamp for "New" badge
   resellerId?: string; // null/undefined means direct WM customer
+  companyId?: string; // Customer's company ID
+  country?: string;
+  ceo?: string;
+  email?: string;
+}
+
+export interface CustomerNote {
+  id: string;
+  customerId: string;
+  content: string;
+  author: string;
+  createdAt: string;
+}
+
+export interface CustomerContract {
+  id: string;
+  customerId: string;
+  serviceName: string;
+  pricingModel: 'Fixed Rate' | 'Pay-as-you-go';
+  startDate: string;
+  endDate: string;
+  amount: string;
+  status: 'active' | 'inactive' | 'expired' | 'pending' | 'rejected';
+  details: string;
+}
+
+export interface PaymentHistory {
+  id: string;
+  customerId: string;
+  invoiceNo: string;
+  period: string;
+  date: string;
+  service: string;
+  status: 'paid' | 'unpaid' | 'overdue';
+  paidAmount: string;
+  difference: string;
 }
 
 export const mockCustomers: Customer[] = [
@@ -17,6 +54,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Jamik Tashpulatov',
     createdAt: '2025. 12. 11',
     resellerId: undefined, // Direct WM customer
+    companyId: 'CP-2025-001',
+    country: 'South Korea',
+    ceo: 'John Smith',
+    email: 'contact@coverpage.com',
   },
   {
     id: '2',
@@ -25,7 +66,11 @@ export const mockCustomers: Customer[] = [
     services: ['Optimization', 'Observability'],
     contactPerson: 'Jamik Tashpulatov',
     createdAt: '2025. 10. 11',
-    resellerId: 'reseller-megazone',
+    resellerId: '1', // Megazone
+    companyId: 'TC-2025-002',
+    country: 'South Korea',
+    ceo: 'David Kim',
+    email: 'contact@tableofcontents.com',
   },
   {
     id: '3',
@@ -34,7 +79,11 @@ export const mockCustomers: Customer[] = [
     services: ['Observability'],
     contactPerson: 'Jamik Tashpulatov',
     createdAt: '2025. 09. 11',
-    resellerId: 'reseller-megazone',
+    resellerId: '1', // Megazone
+    companyId: 'ES-2025-003',
+    country: 'South Korea',
+    ceo: 'Michael Lee',
+    email: 'contact@execsummary.com',
   },
   {
     id: '4',
@@ -44,6 +93,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Eddie Lake',
     createdAt: '2023. 12. 11',
     resellerId: undefined,
+    companyId: 'TA-2023-004',
+    country: 'South Korea',
+    ceo: 'James Park',
+    email: 'eddie.lake@techapproach.com',
   },
   {
     id: '5',
@@ -53,6 +106,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Eddie Lake',
     createdAt: '2023. 12. 11',
     resellerId: undefined,
+    companyId: 'DS-2023-005',
+    country: 'South Korea',
+    ceo: 'Sarah Johnson',
+    email: 'eddie.lake@design.com',
   },
   {
     id: '6',
@@ -62,6 +119,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Eddie Lake',
     createdAt: '2023. 12. 11',
     resellerId: 'reseller-aaa',
+    companyId: 'CP-2023-006',
+    country: 'South Korea',
+    ceo: 'Robert Chen',
+    email: 'eddie.lake@capabilities.com',
   },
   {
     id: '7',
@@ -71,6 +132,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Eddie Lake',
     createdAt: '2023. 12. 11',
     resellerId: undefined,
+    companyId: 'IE-2023-007',
+    country: 'South Korea',
+    ceo: 'Lisa Wang',
+    email: 'eddie.lake@integration.com',
   },
   {
     id: '8',
@@ -80,6 +145,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Eddie Lake',
     createdAt: '2023. 12. 11',
     resellerId: undefined,
+    companyId: 'IA-2023-008',
+    country: 'South Korea',
+    ceo: 'Tom Anderson',
+    email: 'eddie.lake@innovation.com',
   },
   {
     id: '9',
@@ -89,6 +158,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Eddie Lake',
     createdAt: '2023. 12. 11',
     resellerId: 'reseller-vdfghj',
+    companyId: 'OE-2023-009',
+    country: 'South Korea',
+    ceo: 'Nancy Miller',
+    email: 'eddie.lake@emplsystems.com',
   },
   {
     id: '10',
@@ -98,6 +171,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Eddie Lake',
     createdAt: '2023. 12. 11',
     resellerId: undefined,
+    companyId: 'AA-2023-010',
+    country: 'South Korea',
+    ceo: 'Peter Thompson',
+    email: 'eddie.lake@advalgorithms.com',
   },
   {
     id: '11',
@@ -107,6 +184,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Sarah Johnson',
     createdAt: '2025. 08. 15',
     resellerId: undefined,
+    companyId: 'MZ-2025-011',
+    country: 'South Korea',
+    ceo: 'Brian Kim',
+    email: 'sarah.johnson@megazone.com',
   },
   {
     id: '12',
@@ -116,6 +197,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Michael Park',
     createdAt: '2025. 07. 20',
     resellerId: 'reseller-megazone',
+    companyId: 'SS-2025-012',
+    country: 'South Korea',
+    ceo: 'Hwang Sung-woo',
+    email: 'michael.park@samsungsds.com',
   },
   {
     id: '13',
@@ -125,6 +210,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Jennifer Kim',
     createdAt: '2025. 06. 30',
     resellerId: undefined,
+    companyId: 'LG-2025-013',
+    country: 'South Korea',
+    ceo: 'Kim Young-shub',
+    email: 'jennifer.kim@lgcns.com',
   },
   {
     id: '14',
@@ -134,6 +223,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'David Lee',
     createdAt: '2025. 05. 18',
     resellerId: 'reseller-megazone',
+    companyId: 'SK-2025-014',
+    country: 'South Korea',
+    ceo: 'Choi Tae-won',
+    email: 'david.lee@skcc.com',
   },
   {
     id: '15',
@@ -143,6 +236,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Emily Chen',
     createdAt: '2025. 04. 25',
     resellerId: undefined,
+    companyId: 'KE-2025-015',
+    country: 'South Korea',
+    ceo: 'Baek Sang-yeop',
+    email: 'emily.chen@kakaoenterprise.com',
   },
   {
     id: '16',
@@ -152,6 +249,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Robert Wilson',
     createdAt: '2025. 03. 12',
     resellerId: 'reseller-aaa',
+    companyId: 'NC-2025-016',
+    country: 'South Korea',
+    ceo: 'Choi Soo-yeon',
+    email: 'robert.wilson@navercloud.com',
   },
   {
     id: '17',
@@ -161,6 +262,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Lisa Anderson',
     createdAt: '2025. 02. 08',
     resellerId: undefined,
+    companyId: 'HA-2025-017',
+    country: 'South Korea',
+    ceo: 'Lee Hyung-keun',
+    email: 'lisa.anderson@hyundai-autoever.com',
   },
   {
     id: '18',
@@ -170,6 +275,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Thomas Martinez',
     createdAt: '2025. 01. 22',
     resellerId: 'reseller-megazone',
+    companyId: 'PI-2025-018',
+    country: 'South Korea',
+    ceo: 'Jung Chang-wook',
+    email: 'thomas.martinez@poscoict.com',
   },
   {
     id: '19',
@@ -179,6 +288,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Anna Taylor',
     createdAt: '2024. 12. 15',
     resellerId: undefined,
+    companyId: 'HS-2024-019',
+    country: 'South Korea',
+    ceo: 'Kim Yeon-chul',
+    email: 'anna.taylor@hanwhasystems.com',
   },
   {
     id: '20',
@@ -188,6 +301,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'James Brown',
     createdAt: '2024. 11. 30',
     resellerId: 'reseller-vdfghj',
+    companyId: 'LI-2024-020',
+    country: 'South Korea',
+    ceo: 'Park Jeong-won',
+    email: 'james.brown@lotteinno.com',
   },
   {
     id: '21',
@@ -197,6 +314,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Maria Garcia',
     createdAt: '2024. 10. 18',
     resellerId: 'reseller-megazone',
+    companyId: 'SI-2024-021',
+    country: 'South Korea',
+    ceo: 'Song Myung-seop',
+    email: 'maria.garcia@shinsegae-inc.com',
   },
   {
     id: '22',
@@ -206,6 +327,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Chris Davis',
     createdAt: '2024. 09. 05',
     resellerId: undefined,
+    companyId: 'CO-2024-022',
+    country: 'South Korea',
+    ceo: 'Park Jung-ho',
+    email: 'chris.davis@olivenetworks.com',
   },
   {
     id: '23',
@@ -215,6 +340,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Jessica Miller',
     createdAt: '2024. 08. 20',
     resellerId: undefined,
+    companyId: 'GS-2024-023',
+    country: 'South Korea',
+    ceo: 'Kim Yong-hwan',
+    email: 'jessica.miller@gsitm.com',
   },
   {
     id: '24',
@@ -224,6 +353,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Kevin Rodriguez',
     createdAt: '2024. 07. 14',
     resellerId: undefined,
+    companyId: 'DD-2024-024',
+    country: 'South Korea',
+    ceo: 'Lee Jun-beom',
+    email: 'kevin.rodriguez@doosandigital.com',
   },
   {
     id: '25',
@@ -233,6 +366,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Rachel White',
     createdAt: '2024. 06. 28',
     resellerId: undefined,
+    companyId: 'HD-2024-025',
+    country: 'South Korea',
+    ceo: 'Shin Hyun-woo',
+    email: 'rachel.white@hanwhadata.com',
   },
   {
     id: '26',
@@ -242,6 +379,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Daniel Lopez',
     createdAt: '2024. 05. 10',
     resellerId: undefined,
+    companyId: 'WT-2024-026',
+    country: 'South Korea',
+    ceo: 'Cho Byung-kyu',
+    email: 'daniel.lopez@wooritech.com',
   },
   {
     id: '27',
@@ -251,6 +392,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Michelle Lee',
     createdAt: '2024. 04. 22',
     resellerId: undefined,
+    companyId: 'KB-2024-027',
+    country: 'South Korea',
+    ceo: 'Park Jong-kyoo',
+    email: 'michelle.lee@kbdata.com',
   },
   {
     id: '28',
@@ -260,6 +405,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Andrew Thompson',
     createdAt: '2024. 03. 16',
     resellerId: undefined,
+    companyId: 'SD-2024-028',
+    country: 'South Korea',
+    ceo: 'Jin Ok-dong',
+    email: 'andrew.thompson@shinhands.com',
   },
   {
     id: '29',
@@ -269,6 +418,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Sophia Martinez',
     createdAt: '2024. 02. 08',
     resellerId: undefined,
+    companyId: 'IB-2024-029',
+    country: 'South Korea',
+    ceo: 'Kim Sung-tae',
+    email: 'sophia.martinez@ibksystems.com',
   },
   {
     id: '30',
@@ -278,6 +431,10 @@ export const mockCustomers: Customer[] = [
     contactPerson: 'Ryan Anderson',
     createdAt: '2024. 01. 25',
     resellerId: undefined,
+    companyId: 'NH-2024-030',
+    country: 'South Korea',
+    ceo: 'Lee Dae-kyung',
+    email: 'ryan.anderson@nhdigital.com',
   },
 ];
 
@@ -314,3 +471,248 @@ export const mockCustomerContracts: Record<string, number> = {
   '29': 0,
   '30': 4,
 };
+
+// Mock customer notes data
+export const mockCustomerNotes: CustomerNote[] = [
+  {
+    id: 'note-1',
+    customerId: '1',
+    content: 'Initial meeting completed. Customer is interested in expanding their Observability services to include additional monitoring capabilities for their cloud infrastructure.',
+    author: 'John Doe',
+    createdAt: '2025. 12. 15',
+  },
+  {
+    id: 'note-2',
+    customerId: '1',
+    content: 'Follow-up call scheduled for next week to discuss pricing options and contract terms.',
+    author: 'Jane Smith',
+    createdAt: '2025. 12. 18',
+  },
+  {
+    id: 'note-3',
+    customerId: '1',
+    content: 'Customer requested demo of the new dashboard features. Demo scheduled for Dec 22.',
+    author: 'John Doe',
+    createdAt: '2025. 12. 20',
+  },
+  {
+    id: 'note-4',
+    customerId: '1',
+    content: 'Contract renewal discussion. Customer is very satisfied with current services and wants to extend for another year.',
+    author: 'Mike Johnson',
+    createdAt: '2025. 12. 22',
+  },
+  {
+    id: 'note-5',
+    customerId: '1',
+    content: 'Technical support ticket #1234 resolved. Issue was related to API rate limiting.',
+    author: 'Sarah Lee',
+    createdAt: '2025. 12. 25',
+  },
+];
+
+// Mock customer contracts data (detailed)
+export const mockCustomerContractsDetailed: CustomerContract[] = [
+  {
+    id: 'contract-1',
+    customerId: '1',
+    serviceName: 'Observability',
+    pricingModel: 'Fixed Rate',
+    startDate: '2025. 01. 01',
+    endDate: '2025. 12. 31',
+    amount: '$12,000.00',
+    status: 'active',
+    details: '10 nodes, Premium support',
+  },
+  {
+    id: 'contract-2',
+    customerId: '1',
+    serviceName: 'Optimization',
+    pricingModel: 'Pay-as-you-go',
+    startDate: '2025. 06. 01',
+    endDate: '',
+    amount: '$8,500.00',
+    status: 'pending',
+    details: '$0.15 per vCPU hour, Min $500/month',
+  },
+  {
+    id: 'contract-3',
+    customerId: '1',
+    serviceName: 'Management',
+    pricingModel: 'Fixed Rate',
+    startDate: '2024. 01. 01',
+    endDate: '2024. 12. 31',
+    amount: '$15,000.00',
+    status: 'expired',
+    details: '20 nodes, Standard support',
+  },
+  {
+    id: 'contract-4',
+    customerId: '1',
+    serviceName: 'Observability',
+    pricingModel: 'Fixed Rate',
+    startDate: '2025. 03. 01',
+    endDate: '2026. 03. 01',
+    amount: '$18,000.00',
+    status: 'inactive',
+    details: '15 nodes, Enterprise support',
+  },
+  {
+    id: 'contract-5',
+    customerId: '1',
+    serviceName: 'Management',
+    pricingModel: 'Pay-as-you-go',
+    startDate: '2025. 02. 15',
+    endDate: '',
+    amount: '$5,000.00',
+    status: 'rejected',
+    details: '$0.20 per vCPU hour, Min $300/month',
+  },
+  {
+    id: 'contract-6',
+    customerId: '2',
+    serviceName: 'Observability',
+    pricingModel: 'Fixed Rate',
+    startDate: '2025. 01. 01',
+    endDate: '2025. 12. 31',
+    amount: '$10,000.00',
+    status: 'active',
+    details: '8 nodes, Standard support',
+  },
+  {
+    id: 'contract-7',
+    customerId: '2',
+    serviceName: 'Management',
+    pricingModel: 'Pay-as-you-go',
+    startDate: '2025. 02. 01',
+    endDate: '',
+    amount: '$6,000.00',
+    status: 'inactive',
+    details: '$0.12 per vCPU hour, Min $400/month',
+  },
+  {
+    id: 'contract-8',
+    customerId: '2',
+    serviceName: 'Optimization',
+    pricingModel: 'Fixed Rate',
+    startDate: '2024. 06. 01',
+    endDate: '2024. 12. 31',
+    amount: '$8,000.00',
+    status: 'expired',
+    details: '10 nodes, Basic support',
+  },
+  {
+    id: 'contract-9',
+    customerId: '2',
+    serviceName: 'Optimization',
+    pricingModel: 'Fixed Rate',
+    startDate: '2025. 05. 01',
+    endDate: '2026. 05. 01',
+    amount: '$14,000.00',
+    status: 'pending',
+    details: '12 nodes, Premium support',
+  },
+  {
+    id: 'contract-10',
+    customerId: '2',
+    serviceName: 'Observability',
+    pricingModel: 'Pay-as-you-go',
+    startDate: '2025. 03. 15',
+    endDate: '',
+    amount: '$4,500.00',
+    status: 'rejected',
+    details: '$0.18 per vCPU hour, Min $250/month',
+  },
+];
+
+// Mock payment history data
+export const mockPaymentHistory: PaymentHistory[] = [
+  {
+    id: 'payment-1',
+    customerId: '1',
+    invoiceNo: 'INV-2025-001',
+    period: '2025. 01',
+    date: '2025. 01. 15',
+    service: 'Observability',
+    status: 'paid',
+    paidAmount: '$1,000.00',
+    difference: '$0.00',
+  },
+  {
+    id: 'payment-2',
+    customerId: '1',
+    invoiceNo: 'INV-2025-002',
+    period: '2025. 02',
+    date: '2025. 02. 15',
+    service: 'Observability',
+    status: 'paid',
+    paidAmount: '$1,000.00',
+    difference: '$0.00',
+  },
+  {
+    id: 'payment-3',
+    customerId: '1',
+    invoiceNo: 'INV-2025-003',
+    period: '2025. 03',
+    date: '2025. 03. 15',
+    service: 'Observability',
+    status: 'paid',
+    paidAmount: '$1,000.00',
+    difference: '$0.00',
+  },
+  {
+    id: 'payment-4',
+    customerId: '1',
+    invoiceNo: 'INV-2025-004',
+    period: '2025. 04',
+    date: '2025. 04. 15',
+    service: 'Observability',
+    status: 'unpaid',
+    paidAmount: '$0.00',
+    difference: '$1,000.00',
+  },
+  {
+    id: 'payment-5',
+    customerId: '1',
+    invoiceNo: 'INV-2025-005',
+    period: '2025. 06',
+    date: '2025. 06. 15',
+    service: 'Optimization',
+    status: 'paid',
+    paidAmount: '$850.00',
+    difference: '$0.00',
+  },
+  {
+    id: 'payment-6',
+    customerId: '1',
+    invoiceNo: 'INV-2025-006',
+    period: '2025. 07',
+    date: '2025. 07. 15',
+    service: 'Optimization',
+    status: 'paid',
+    paidAmount: '$920.00',
+    difference: '$0.00',
+  },
+  {
+    id: 'payment-7',
+    customerId: '1',
+    invoiceNo: 'INV-2025-007',
+    period: '2025. 08',
+    date: '2025. 08. 15',
+    service: 'Optimization',
+    status: 'overdue',
+    paidAmount: '$0.00',
+    difference: '$880.00',
+  },
+  {
+    id: 'payment-8',
+    customerId: '1',
+    invoiceNo: 'INV-2024-001',
+    period: '2024. 01',
+    date: '2024. 01. 15',
+    service: 'Management',
+    status: 'paid',
+    paidAmount: '$1,250.00',
+    difference: '$0.00',
+  },
+];

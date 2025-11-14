@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { X, Check, ChevronsUpDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -43,6 +44,9 @@ interface FilterDialogProps {
   selectedReseller: string;
   onResellerChange: (reseller: string) => void;
   showResellerFilter: boolean;
+  selectedApprovalStatus?: string;
+  onApprovalStatusChange?: (status: string) => void;
+  showApprovalStatusFilter?: boolean;
   onReset: () => void;
   onApply: () => void;
 }
@@ -82,9 +86,13 @@ export function FilterDialog({
   selectedReseller,
   onResellerChange,
   showResellerFilter,
+  selectedApprovalStatus,
+  onApprovalStatusChange,
+  showApprovalStatusFilter,
   onReset,
   onApply,
 }: FilterDialogProps) {
+  const { t } = useTranslation();
   const [resellerOpen, setResellerOpen] = useState(false);
 
   const handleServiceToggle = (service: string) => {
@@ -116,7 +124,7 @@ export function FilterDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md gap-6" showCloseButton={false}>
         <DialogHeader className="gap-1.5">
-          <DialogTitle className="text-lg font-semibold leading-none">Filter</DialogTitle>
+          <DialogTitle className="text-lg font-semibold leading-none">{t('common.filter')}</DialogTitle>
         </DialogHeader>
 
         <button
@@ -124,14 +132,14 @@ export function FilterDialog({
           className="absolute right-4 top-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
         >
           <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
+          <span className="sr-only">{t('common.close')}</span>
         </button>
 
         <div className="flex flex-col gap-4">
           {/* Reseller Filter - WM users only */}
           {showResellerFilter && (
             <div className="flex flex-col gap-3">
-              <p className="text-sm font-medium leading-5">Reseller</p>
+              <p className="text-sm font-medium leading-5">{t('contracts.reseller')}</p>
               <Popover open={resellerOpen} onOpenChange={setResellerOpen} modal={true}>
                 <PopoverTrigger asChild>
                   <Button
@@ -142,7 +150,7 @@ export function FilterDialog({
                   >
                     {selectedReseller
                       ? resellers.find((reseller) => reseller.value === selectedReseller)?.label
-                      : 'ALL'}
+                      : t('common.all')}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -153,9 +161,9 @@ export function FilterDialog({
                   style={{ width: 'var(--radix-popover-trigger-width)' }}
                 >
                   <Command>
-                    <CommandInput placeholder="Search reseller..." />
+                    <CommandInput placeholder={t('contracts.searchReseller')} />
                     <CommandList className="max-h-[200px]">
-                      <CommandEmpty>No reseller found.</CommandEmpty>
+                      <CommandEmpty>{t('contracts.noResellerFound')}</CommandEmpty>
                       <CommandGroup>
                         {resellers.map((reseller) => (
                           <CommandItem
@@ -185,8 +193,8 @@ export function FilterDialog({
 
           {/* Service Filter - Checkboxes */}
           <div className="flex flex-col gap-3">
-            <p className="text-sm font-medium leading-5">Service</p>
-            <div className="flex flex-col p-1">
+            <p className="text-sm font-medium leading-5">{t('contracts.service')}</p>
+            <div className="flex flex-col gap-1 p-1">
               {['Observability', 'Management', 'Optimization'].map((service) => {
                 const isSelected = selectedServices.includes(service);
                 return (
@@ -215,45 +223,65 @@ export function FilterDialog({
 
           {/* Pricing Model Filter - Dropdown */}
           <div className="flex flex-col gap-3">
-            <p className="text-sm font-medium leading-5">Pricing Model</p>
+            <p className="text-sm font-medium leading-5">{t('contracts.pricingModel')}</p>
             <Select value={selectedPricingModel} onValueChange={onPricingModelChange}>
               <SelectTrigger className="h-9 w-full">
-                <SelectValue placeholder="ALL" />
+                <SelectValue placeholder={t('common.all')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">ALL</SelectItem>
-                <SelectItem value="Fixed Rate">Fixed Rate</SelectItem>
-                <SelectItem value="Pay-as-you-go">Pay-as-you-go</SelectItem>
+                <SelectItem value="all">{t('common.all')}</SelectItem>
+                <SelectItem value="Fixed Rate">{t('pricing.fixedRate')}</SelectItem>
+                <SelectItem value="Pay-as-you-go">{t('pricing.payAsYouGo')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Status Filter - Dropdown */}
           <div className="flex flex-col gap-3">
-            <p className="text-sm font-medium leading-5">Status</p>
+            <p className="text-sm font-medium leading-5">{t('common.status')}</p>
             <Select value={selectedStatus} onValueChange={onStatusChange}>
               <SelectTrigger className="h-9 w-full">
-                <SelectValue placeholder="ALL" />
+                <SelectValue placeholder={t('common.all')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">ALL</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
+                <SelectItem value="all">{t('common.all')}</SelectItem>
+                <SelectItem value="active">{t('status.active')}</SelectItem>
+                <SelectItem value="inactive">{t('status.inactive')}</SelectItem>
+                <SelectItem value="expired">{t('status.expired')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
+
+          {/* Approval Status Filter - Resellers only */}
+          {showApprovalStatusFilter && selectedApprovalStatus !== undefined && onApprovalStatusChange && (
+            <div className="flex flex-col gap-3">
+              <p className="text-sm font-medium leading-5">{t('contracts.approvalStatus')}</p>
+              <Select value={selectedApprovalStatus} onValueChange={onApprovalStatusChange}>
+                <SelectTrigger className="h-9 w-full">
+                  <SelectValue placeholder={t('common.all')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('common.all')}</SelectItem>
+                  <SelectItem value="pending">{t('contracts.pending')}</SelectItem>
+                  <SelectItem value="approved">{t('contracts.approved')}</SelectItem>
+                  <SelectItem value="rejected">{t('contracts.rejected')}</SelectItem>
+                  <SelectItem value="cancelled">{t('contracts.canceled')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         </div>
 
         <DialogFooter className="flex items-center justify-between sm:justify-between">
           <Button variant="outline" className="h-9 px-4 text-sm" onClick={handleReset}>
-            Reset
+            {t('common.reset')}
           </Button>
           <div className="flex gap-2">
             <Button variant="outline" className="h-9 px-4 text-sm" onClick={handleClose}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button className="h-9 px-4 text-sm" onClick={handleApply}>
-              Apply
+              {t('common.apply')}
             </Button>
           </div>
         </DialogFooter>
