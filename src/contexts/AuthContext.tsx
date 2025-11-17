@@ -25,6 +25,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         authApi.saveUser(autoLoginUser);
         setUser(autoLoginUser);
         setIsLoading(false);
+        // Redirect to dashboard after auto-login
+        navigate('/dashboard');
         return;
       }
     }
@@ -33,7 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const currentUser = authApi.getCurrentUser();
     setUser(currentUser);
     setIsLoading(false);
-  }, [location.search]);
+  }, [location.search, navigate]);
 
   const login = async (credentials: LoginCredentials) => {
     setIsLoading(true);
