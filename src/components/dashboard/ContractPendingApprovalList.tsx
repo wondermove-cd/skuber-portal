@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface PendingContract {
   id: string;
@@ -30,6 +31,7 @@ export function ContractPendingApprovalList({
   onReject
 }: ContractPendingApprovalListProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5;
 
@@ -90,7 +92,9 @@ export function ContractPendingApprovalList({
               <div className="flex-1 min-w-[110px] border-b border-border h-10 px-2 flex items-center">
                 <p className="text-sm font-medium leading-5 text-muted-foreground">Submitted</p>
               </div>
-              <div className="w-[85px] shrink-0 border-b border-border h-10 px-2" />
+              {user?.role === 'wm_admin' || user?.role === 'wm_editor' ? (
+                <div className="w-[85px] shrink-0 border-b border-border h-10 px-2" />
+              ) : null}
             </div>
 
             {/* Table Body */}
@@ -141,22 +145,24 @@ export function ContractPendingApprovalList({
                     {contract.submitted}
                   </p>
                 </div>
-                <div className="w-[85px] shrink-0 border-b border-border h-[72px] p-2 flex items-center justify-end gap-2">
-                  <button
-                    onClick={() => handleApprove(contract.id)}
-                    className="bg-primary rounded-md size-8 flex items-center justify-center hover:bg-primary/90 transition-colors"
-                    aria-label="Approve"
-                  >
-                    <Check className="size-4 text-primary-foreground" />
-                  </button>
-                  <button
-                    onClick={() => handleReject(contract.id)}
-                    className="bg-background border border-input rounded-md size-8 flex items-center justify-center hover:bg-secondary transition-colors"
-                    aria-label="Reject"
-                  >
-                    <X className="size-4 text-foreground" />
-                  </button>
-                </div>
+                {user?.role === 'wm_admin' || user?.role === 'wm_editor' ? (
+                  <div className="w-[85px] shrink-0 border-b border-border h-[72px] p-2 flex items-center justify-end gap-2">
+                    <button
+                      onClick={() => handleApprove(contract.id)}
+                      className="bg-primary rounded-md size-8 flex items-center justify-center hover:bg-primary/90 transition-colors"
+                      aria-label="Approve"
+                    >
+                      <Check className="size-4 text-primary-foreground" />
+                    </button>
+                    <button
+                      onClick={() => handleReject(contract.id)}
+                      className="bg-background border border-input rounded-md size-8 flex items-center justify-center hover:bg-secondary transition-colors"
+                      aria-label="Reject"
+                    >
+                      <X className="size-4 text-foreground" />
+                    </button>
+                  </div>
+                ) : null}
               </div>
             ))}
           </div>
