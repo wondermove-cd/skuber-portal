@@ -7,6 +7,17 @@
 **총 문서 크기**: 약 11,500줄
 **읽기 방법**: 전체 읽기 ❌ / 필요한 부분만 검색 ✅
 
+### 🌐 실제 사이트 접속 방법
+
+**배포 URL**: `https://[배포URL]` ← 실제 URL로 교체 필요
+
+**테스트 계정**:
+- **WM Admin**: ID/PW 추가 필요
+- **WM Editor**: ID/PW 추가 필요
+- **Reseller Admin**: ID/PW 추가 필요
+
+> 💡 **Tip**: 표의 "실제 페이지" 링크를 클릭하면 해당 페이지로 바로 이동합니다.
+
 ---
 
 ## 🎯 빠른 시작 (5분)
@@ -31,29 +42,29 @@
 
 ## 🗺️ WM 도메인 페이지별 바로가기
 
-| 페이지 | 문서 위치 | Figma | 주요 API |
-|--------|----------|-------|---------|
-| **Dashboard** | [wm-api-spec.md - Section 2](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#2-wm-dashboard) | [Figma 링크 추가] | `GET /api/wm/dashboard`<br>`POST /api/contracts/{id}/approve` |
-| **Customers** | [wm-api-spec.md - Section 3](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#3-customers-page) | [Figma 링크 추가] | `GET /api/customers`<br>`POST /api/customers` |
-| **Customer Detail** | [wm-api-spec.md - Section 4](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#4-customer-detail-page) | [Figma 링크 추가] | `GET /api/customers/{id}` |
-| **Reseller** | [wm-api-spec.md - Section 5](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#5-reseller-page) | [Figma 링크 추가] | `GET /api/resellers` |
-| **Reseller Detail** | [wm-api-spec.md - Section 6](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#6-reseller-detail-page) | [Figma 링크 추가] | `GET /api/resellers/{id}` |
-| **Payments** | [wm-api-spec.md - Section 7](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#7-payments-page) | [Figma 링크 추가] | `GET /api/payments`<br>`PUT /api/payments/{id}` |
-| **Contracts** | [wm-api-spec.md - Section 8](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#8-contracts-page) | [Figma 링크 추가] | `GET /api/contracts`<br>`POST /api/contracts` |
-| **Contract Detail** | [wm-api-spec.md - Section 9](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#9-contract-detail-page) | [Figma 링크 추가] | `GET /api/contracts/{id}` |
-| **Settings** | [wm-api-spec.md - Section 10](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#10-settings-page) | [Figma 링크 추가] | `GET /api/settings/accounts`<br>`POST /api/settings/accounts` |
+| 페이지 | 실제 페이지 | 문서 위치 | Figma | 주요 API |
+|--------|------------|----------|-------|---------|
+| **Dashboard** | [🔗 /dashboard](https://[배포URL]/dashboard) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#2-wm-dashboard) | [🎨 Design](#) | `GET /api/wm/dashboard` |
+| **Customers** | [🔗 /customers](https://[배포URL]/customers) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#3-customers-page) | [🎨 Design](#) | `GET /api/customers` |
+| **Customer Detail** | [🔗 /customers/:id](https://[배포URL]/customers/example-id) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#4-customer-detail-page) | [🎨 Design](#) | `GET /api/customers/{id}` |
+| **Reseller** | [🔗 /reseller](https://[배포URL]/reseller) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#5-reseller-page) | [🎨 Design](#) | `GET /api/resellers` |
+| **Reseller Detail** | [🔗 /reseller/:id](https://[배포URL]/reseller/example-id) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#6-reseller-detail-page) | [🎨 Design](#) | `GET /api/resellers/{id}` |
+| **Payments** | [🔗 /payments](https://[배포URL]/payments) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#7-payments-page) | [🎨 Design](#) | `GET /api/payments` |
+| **Contracts** | [🔗 /contracts](https://[배포URL]/contracts) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#8-contracts-page) | [🎨 Design](#) | `GET /api/contracts` |
+| **Contract Detail** | [🔗 /contracts/:id](https://[배포URL]/contracts/example-id) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#9-contract-detail-page) | [🎨 Design](#) | `GET /api/contracts/{id}` |
+| **Settings** | [🔗 /settings](https://[배포URL]/settings) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#10-settings-page) | [🎨 Design](#) | `GET /api/settings/accounts` |
 
 ---
 
 ## 🏪 Reseller 도메인 페이지별 바로가기
 
-| 페이지 | 문서 위치 | Figma | 주요 API |
-|--------|----------|-------|---------|
-| **Dashboard** | [reseller-api-spec.md - Section 2](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#2-reseller-dashboard) | [Figma 링크 추가] | `GET /api/reseller/dashboard` |
-| **My Payments** | [reseller-api-spec.md - Section 3](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#3-my-payments-page) | [Figma 링크 추가] | `GET /api/reseller/payments` |
-| **Contracts** | [reseller-api-spec.md - Section 4](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#4-contracts-page) | [Figma 링크 추가] | `GET /api/reseller/contracts`<br>`POST /api/reseller/contracts` |
-| **Contract Detail** | [reseller-api-spec.md - Section 5](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#5-contract-detail-page) | [Figma 링크 추가] | `GET /api/reseller/contracts/{id}` |
-| **Settings** | [reseller-api-spec.md - Section 6](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#6-settings-page) | [Figma 링크 추가] | `GET /api/reseller/settings/accounts` |
+| 페이지 | 실제 페이지 | 문서 위치 | Figma | 주요 API |
+|--------|------------|----------|-------|---------|
+| **Dashboard** | [🔗 /reseller/dashboard](https://[배포URL]/reseller/dashboard) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#2-reseller-dashboard) | [🎨 Design](#) | `GET /api/reseller/dashboard` |
+| **My Payments** | [🔗 /reseller/payments](https://[배포URL]/reseller/payments) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#3-my-payments-page) | [🎨 Design](#) | `GET /api/reseller/payments` |
+| **Contracts** | [🔗 /reseller/contracts](https://[배포URL]/reseller/contracts) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#4-contracts-page) | [🎨 Design](#) | `GET /api/reseller/contracts` |
+| **Contract Detail** | [🔗 /reseller/contracts/:id](https://[배포URL]/reseller/contracts/example-id) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#5-contract-detail-page) | [🎨 Design](#) | `GET /api/reseller/contracts/{id}` |
+| **Settings** | [🔗 /reseller/settings](https://[배포URL]/reseller/settings) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#6-settings-page) | [🎨 Design](#) | `GET /api/reseller/settings/accounts` |
 
 ---
 
@@ -134,5 +145,44 @@ Reseller Users:
 
 ---
 
-**최종 업데이트**: 2025-01-16
-**문서 버전**: 2.0
+## 🔐 실제 사이트 접속 정보
+
+### 배포 환경
+
+**Production URL**: `https://[배포URL]` ← **실제 URL로 교체 필요**
+
+### 테스트 계정 정보
+
+#### WM 도메인 계정
+
+| 역할 | 이메일 | 비밀번호 | 권한 |
+|------|--------|---------|------|
+| **WM Admin** | [이메일 추가] | [비밀번호 추가] | 모든 페이지 접근 + 편집 + 계정 관리 |
+| **WM Editor** | [이메일 추가] | [비밀번호 추가] | 모든 페이지 접근 + 편집 (계정 관리 제외) |
+| **WM Viewer** | [이메일 추가] | [비밀번호 추가] | 모든 페이지 조회만 |
+
+#### Reseller 도메인 계정
+
+| 역할 | 이메일 | 비밀번호 | 권한 |
+|------|--------|---------|------|
+| **Reseller Admin** | [이메일 추가] | [비밀번호 추가] | Reseller 페이지 모든 권한 (자사 데이터만) |
+| **Reseller Editor** | [이메일 추가] | [비밀번호 추가] | Reseller 페이지 조회 + 편집 (자사 데이터만) |
+| **Reseller Viewer** | [이메일 추가] | [비밀번호 추가] | Reseller 페이지 조회만 (자사 데이터만) |
+
+### 로그인 방법
+
+1. **로그인 페이지 접속**: `https://[배포URL]/login`
+2. **계정 선택**: 테스트하려는 역할에 맞는 계정 선택
+3. **이메일/비밀번호 입력**
+4. **로그인 버튼 클릭**
+
+### 페이지 직접 접근
+
+위 표의 "실제 페이지" 링크를 클릭하면 해당 페이지로 바로 이동합니다.
+- 예: Dashboard → `https://[배포URL]/dashboard`
+- 예: Customers → `https://[배포URL]/customers`
+
+---
+
+**최종 업데이트**: 2025-01-17
+**문서 버전**: 2.1
