@@ -42,29 +42,29 @@
 
 ## 🗺️ WM 도메인 페이지별 바로가기
 
-| 페이지 | 실제 페이지 | 문서 위치 | Figma | 주요 API |
-|--------|------------|----------|-------|---------|
-| **Dashboard** | [🔗 /dashboard](https://skuber-portal.vercel.app/dashboard) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#2-wm-dashboard) | [🎨 Design](#) | `GET /api/wm/dashboard` |
-| **Customers** | [🔗 /customers](https://skuber-portal.vercel.app/customers) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#3-customers-page) | [🎨 Design](#) | `GET /api/customers` |
-| **Customer Detail** | [🔗 /customers/:id](https://skuber-portal.vercel.app/customers/example-id) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#4-customer-detail-page) | [🎨 Design](#) | `GET /api/customers/{id}` |
-| **Reseller** | [🔗 /reseller](https://skuber-portal.vercel.app/reseller) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#5-reseller-page) | [🎨 Design](#) | `GET /api/resellers` |
-| **Reseller Detail** | [🔗 /reseller/:id](https://skuber-portal.vercel.app/reseller/example-id) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#6-reseller-detail-page) | [🎨 Design](#) | `GET /api/resellers/{id}` |
-| **Payments** | [🔗 /payments](https://skuber-portal.vercel.app/payments) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#7-payments-page) | [🎨 Design](#) | `GET /api/payments` |
-| **Contracts** | [🔗 /contracts](https://skuber-portal.vercel.app/contracts) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#8-contracts-page) | [🎨 Design](#) | `GET /api/contracts` |
-| **Contract Detail** | [🔗 /contracts/:id](https://skuber-portal.vercel.app/contracts/example-id) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#9-contract-detail-page) | [🎨 Design](#) | `GET /api/contracts/{id}` |
-| **Settings** | [🔗 /settings](https://skuber-portal.vercel.app/settings) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#10-settings-page) | [🎨 Design](#) | `GET /api/settings/accounts` |
+| 페이지 | 실제 페이지 | 문서 위치 | Figma |
+|--------|------------|----------|-------|
+| **Dashboard** | [🔗 /dashboard](https://skuber-portal.vercel.app/dashboard) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#2-wm-dashboard) | [🎨 Design](#) |
+| **Customers** | [🔗 /customers](https://skuber-portal.vercel.app/customers) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#3-customers-page) | [🎨 Design](#) |
+| **Customer Detail** | [🔗 /customers/:id](https://skuber-portal.vercel.app/customers/example-id) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#4-customer-detail-page) | [🎨 Design](#) |
+| **Reseller** | [🔗 /reseller](https://skuber-portal.vercel.app/reseller) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#5-reseller-page) | [🎨 Design](#) |
+| **Reseller Detail** | [🔗 /reseller/:id](https://skuber-portal.vercel.app/reseller/example-id) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#6-reseller-detail-page) | [🎨 Design](#) |
+| **Payments** | [🔗 /payments](https://skuber-portal.vercel.app/payments) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#7-payments-page) | [🎨 Design](#) |
+| **Contracts** | [🔗 /contracts](https://skuber-portal.vercel.app/contracts) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#8-contracts-page) | [🎨 Design](#) |
+| **Contract Detail** | [🔗 /contracts/:id](https://skuber-portal.vercel.app/contracts/example-id) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#9-contract-detail-page) | [🎨 Design](#) |
+| **Settings** | [🔗 /settings](https://skuber-portal.vercel.app/settings) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/wm-api-spec.md#10-settings-page) | [🎨 Design](#) |
 
 ---
 
 ## 🏪 Reseller 도메인 페이지별 바로가기
 
-| 페이지 | 실제 페이지 | 문서 위치 | Figma | 주요 API |
-|--------|------------|----------|-------|---------|
-| **Dashboard** | [🔗 /reseller/dashboard](https://skuber-portal.vercel.app/reseller/dashboard) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#2-reseller-dashboard) | [🎨 Design](#) | `GET /api/reseller/dashboard` |
-| **My Payments** | [🔗 /reseller/payments](https://skuber-portal.vercel.app/reseller/payments) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#3-my-payments-page) | [🎨 Design](#) | `GET /api/reseller/payments` |
-| **Contracts** | [🔗 /reseller/contracts](https://skuber-portal.vercel.app/reseller/contracts) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#4-contracts-page) | [🎨 Design](#) | `GET /api/reseller/contracts` |
-| **Contract Detail** | [🔗 /reseller/contracts/:id](https://skuber-portal.vercel.app/reseller/contracts/example-id) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#5-contract-detail-page) | [🎨 Design](#) | `GET /api/reseller/contracts/{id}` |
-| **Settings** | [🔗 /reseller/settings](https://skuber-portal.vercel.app/reseller/settings) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#6-settings-page) | [🎨 Design](#) | `GET /api/reseller/settings/accounts` |
+| 페이지 | 실제 페이지 | 문서 위치 | Figma |
+|--------|------------|----------|-------|
+| **Dashboard** | [🔗 /reseller/dashboard](https://skuber-portal.vercel.app/reseller/dashboard) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#2-reseller-dashboard) | [🎨 Design](#) |
+| **My Payments** | [🔗 /reseller/payments](https://skuber-portal.vercel.app/reseller/payments) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#3-my-payments-page) | [🎨 Design](#) |
+| **Contracts** | [🔗 /reseller/contracts](https://skuber-portal.vercel.app/reseller/contracts) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#4-contracts-page) | [🎨 Design](#) |
+| **Contract Detail** | [🔗 /reseller/contracts/:id](https://skuber-portal.vercel.app/reseller/contracts/example-id) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#5-contract-detail-page) | [🎨 Design](#) |
+| **Settings** | [🔗 /reseller/settings](https://skuber-portal.vercel.app/reseller/settings) | [📄 Spec](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/reseller-api-spec.md#6-settings-page) | [🎨 Design](#) |
 
 ---
 
