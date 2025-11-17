@@ -365,7 +365,6 @@ export function ResellerPage() {
       resellerId: `RES-${year}${month}${day}${newId}`,
       country: 'South Korea',
       businessRegNo: '',
-      ceo: '',
       customerCount: 0,
       contractCount: 0,
       invitationStatus: 'Pending',

@@ -328,7 +328,8 @@ export default function ResellerContractDetailPage() {
   };
 
   const handleCancelSubmissionClick = () => {
-    setCancelSubmissionDialogOpen(true);
+    // Open edit modal with current pending contract data
+    setAddContractModalOpen(true);
   };
 
   const handleCancelSubmissionConfirm = () => {
@@ -1020,6 +1021,36 @@ export default function ResellerContractDetailPage() {
         onAddCustomer={() => {}}
         initialCustomerId={contract?.customerId}
         initialStep={3}
+        editMode={contract?.approvalStatus === 'pending'}
+        existingContract={(contract?.approvalStatus === 'pending' || contract?.approvalStatus === 'rejected') ? {
+          id: contract.id,
+          customerId: contract.customerId,
+          serviceName: contract.service,
+          pricingModel: contract.pricingModel,
+          startDate: typeof contract.billingInfo === 'object' && 'contractPeriod' in contract.billingInfo
+            ? contract.billingInfo.contractPeriod.split(' - ')[0]
+            : contract.createdAt,
+          endDate: typeof contract.billingInfo === 'object' && 'contractPeriod' in contract.billingInfo
+            ? contract.billingInfo.contractPeriod.split(' - ')[1]
+            : '',
+          amount: typeof contract.billingInfo === 'object' && 'contractAmount' in contract.billingInfo
+            ? contract.billingInfo.contractAmount
+            : '',
+          status: contract.status,
+          approvalStatus: contract.approvalStatus,
+          billingInfo: contract.billingInfo,
+          details: typeof contract.billingInfo === 'object' && 'includedAllocation' in contract.billingInfo
+            ? `${contract.billingInfo.includedAllocation} vCPU included`
+            : typeof contract.billingInfo === 'object' && 'vcpuUnitPrice' in contract.billingInfo && 'minimumCharge' in contract.billingInfo
+            ? `$${contract.billingInfo.vcpuUnitPrice} / vCPU-hour, Minimum $${contract.billingInfo.minimumCharge || 0} / month`
+            : typeof contract.billingInfo === 'object' && 'rate' in contract.billingInfo
+            ? contract.billingInfo.rate
+            : '',
+        } : undefined}
+        onContractEdited={() => {
+          // Navigate to contracts page after editing
+          navigate('/dashboard/contracts');
+        }}
         onContractAdded={handleContractAdded}
         rejectedContractId={contract?.approvalStatus === 'rejected' ? contractId : undefined}
       />

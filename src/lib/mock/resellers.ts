@@ -25,7 +25,6 @@ export interface Reseller {
   resellerId: string;
   country: string;
   businessRegNo: string;
-  ceo: string;
   customerCount: number;
   contractCount: number;
   invitationStatus: 'Accepted' | 'Pending' | 'Expired' | 'Canceled' | 'N/A';
@@ -45,7 +44,6 @@ export const mockResellers: Reseller[] = [
     resellerId: 'IDIDMDIDMDK',
     country: 'South Korea',
     businessRegNo: '123-456789',
-    ceo: 'Jamik Tashpulatov',
     customerCount: 2,
     contractCount: 2,
     invitationStatus: 'Accepted',
@@ -104,7 +102,6 @@ export const mockResellers: Reseller[] = [
     resellerId: 'RES-20240102',
     country: 'South Korea',
     businessRegNo: '234-567890',
-    ceo: 'Kim Manager',
     customerCount: 46,
     contractCount: 50,
     invitationStatus: 'Pending',
@@ -143,7 +140,6 @@ export const mockResellers: Reseller[] = [
     resellerId: 'RES-20240103',
     country: 'Japan',
     businessRegNo: '345-678901',
-    ceo: 'Tanaka Ichiro',
     customerCount: 5,
     contractCount: 12,
     invitationStatus: 'Expired',
@@ -182,7 +178,6 @@ export const mockResellers: Reseller[] = [
     resellerId: 'RES-20240104',
     country: 'United States',
     businessRegNo: '456-789012',
-    ceo: 'John Smith',
     customerCount: 5,
     contractCount: 8,
     invitationStatus: 'N/A',
@@ -198,7 +193,6 @@ export const mockResellers: Reseller[] = [
     resellerId: 'RES-20240105',
     country: 'South Korea',
     businessRegNo: '567-890123',
-    ceo: 'Park Designer',
     customerCount: 48,
     contractCount: 45,
     invitationStatus: 'Accepted',
@@ -215,7 +209,6 @@ export const mockResellers: Reseller[] = [
     resellerId: 'RES-20240106',
     country: 'South Korea',
     businessRegNo: '678-901234',
-    ceo: 'Lee Capability',
     customerCount: 36,
     contractCount: 38,
     invitationStatus: 'Accepted',
@@ -232,7 +225,6 @@ export const mockResellers: Reseller[] = [
     resellerId: 'RES-20240107',
     country: 'South Korea',
     businessRegNo: '789-012345',
-    ceo: 'Choi Integration',
     customerCount: 46,
     contractCount: 58,
     invitationStatus: 'Pending',
@@ -249,7 +241,6 @@ export const mockResellers: Reseller[] = [
     resellerId: 'RES-20240108',
     country: 'South Korea',
     businessRegNo: '890-123456',
-    ceo: 'Jung Innovation',
     customerCount: 55,
     contractCount: 22,
     invitationStatus: 'Accepted',
@@ -266,7 +257,6 @@ export const mockResellers: Reseller[] = [
     resellerId: 'RES-20240109',
     country: 'South Korea',
     businessRegNo: '901-234567',
-    ceo: 'Kang EMR',
     customerCount: 1,
     contractCount: 1,
     invitationStatus: 'Pending',
@@ -283,7 +273,6 @@ export const mockResellers: Reseller[] = [
     resellerId: 'RES-20240110',
     country: 'South Korea',
     businessRegNo: '012-345678',
-    ceo: 'Yoon Algorithm',
     customerCount: 2,
     contractCount: 2,
     invitationStatus: 'Accepted',

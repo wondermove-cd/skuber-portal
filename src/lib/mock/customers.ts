@@ -9,7 +9,6 @@ export interface Customer {
   resellerId?: string; // null/undefined means direct WM customer
   companyId?: string; // Customer's company ID
   country?: string;
-  ceo?: string;
   email?: string;
 }
 
@@ -29,7 +28,8 @@ export interface CustomerContract {
   startDate: string;
   endDate: string;
   amount: string;
-  status: 'active' | 'inactive' | 'expired' | 'pending' | 'rejected';
+  status: 'active' | 'inactive' | 'expired';
+  approvalStatus?: 'approved' | 'pending' | 'rejected';
   details: string;
 }
 
@@ -56,7 +56,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined, // Direct WM customer
     companyId: 'CP-2025-001',
     country: 'South Korea',
-    ceo: 'John Smith',
     email: 'contact@coverpage.com',
   },
   {
@@ -69,7 +68,6 @@ export const mockCustomers: Customer[] = [
     resellerId: '1', // Megazone
     companyId: 'TC-2025-002',
     country: 'South Korea',
-    ceo: 'David Kim',
     email: 'contact@tableofcontents.com',
   },
   {
@@ -82,7 +80,6 @@ export const mockCustomers: Customer[] = [
     resellerId: '1', // Megazone
     companyId: 'ES-2025-003',
     country: 'South Korea',
-    ceo: 'Michael Lee',
     email: 'contact@execsummary.com',
   },
   {
@@ -95,7 +92,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'TA-2023-004',
     country: 'South Korea',
-    ceo: 'James Park',
     email: 'eddie.lake@techapproach.com',
   },
   {
@@ -108,7 +104,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'DS-2023-005',
     country: 'South Korea',
-    ceo: 'Sarah Johnson',
     email: 'eddie.lake@design.com',
   },
   {
@@ -121,7 +116,6 @@ export const mockCustomers: Customer[] = [
     resellerId: 'reseller-aaa',
     companyId: 'CP-2023-006',
     country: 'South Korea',
-    ceo: 'Robert Chen',
     email: 'eddie.lake@capabilities.com',
   },
   {
@@ -134,7 +128,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'IE-2023-007',
     country: 'South Korea',
-    ceo: 'Lisa Wang',
     email: 'eddie.lake@integration.com',
   },
   {
@@ -147,7 +140,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'IA-2023-008',
     country: 'South Korea',
-    ceo: 'Tom Anderson',
     email: 'eddie.lake@innovation.com',
   },
   {
@@ -160,7 +152,6 @@ export const mockCustomers: Customer[] = [
     resellerId: 'reseller-vdfghj',
     companyId: 'OE-2023-009',
     country: 'South Korea',
-    ceo: 'Nancy Miller',
     email: 'eddie.lake@emplsystems.com',
   },
   {
@@ -173,7 +164,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'AA-2023-010',
     country: 'South Korea',
-    ceo: 'Peter Thompson',
     email: 'eddie.lake@advalgorithms.com',
   },
   {
@@ -186,7 +176,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'MZ-2025-011',
     country: 'South Korea',
-    ceo: 'Brian Kim',
     email: 'sarah.johnson@megazone.com',
   },
   {
@@ -199,7 +188,6 @@ export const mockCustomers: Customer[] = [
     resellerId: 'reseller-megazone',
     companyId: 'SS-2025-012',
     country: 'South Korea',
-    ceo: 'Hwang Sung-woo',
     email: 'michael.park@samsungsds.com',
   },
   {
@@ -212,7 +200,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'LG-2025-013',
     country: 'South Korea',
-    ceo: 'Kim Young-shub',
     email: 'jennifer.kim@lgcns.com',
   },
   {
@@ -225,7 +212,6 @@ export const mockCustomers: Customer[] = [
     resellerId: 'reseller-megazone',
     companyId: 'SK-2025-014',
     country: 'South Korea',
-    ceo: 'Choi Tae-won',
     email: 'david.lee@skcc.com',
   },
   {
@@ -238,7 +224,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'KE-2025-015',
     country: 'South Korea',
-    ceo: 'Baek Sang-yeop',
     email: 'emily.chen@kakaoenterprise.com',
   },
   {
@@ -251,7 +236,6 @@ export const mockCustomers: Customer[] = [
     resellerId: 'reseller-aaa',
     companyId: 'NC-2025-016',
     country: 'South Korea',
-    ceo: 'Choi Soo-yeon',
     email: 'robert.wilson@navercloud.com',
   },
   {
@@ -264,7 +248,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'HA-2025-017',
     country: 'South Korea',
-    ceo: 'Lee Hyung-keun',
     email: 'lisa.anderson@hyundai-autoever.com',
   },
   {
@@ -277,7 +260,6 @@ export const mockCustomers: Customer[] = [
     resellerId: 'reseller-megazone',
     companyId: 'PI-2025-018',
     country: 'South Korea',
-    ceo: 'Jung Chang-wook',
     email: 'thomas.martinez@poscoict.com',
   },
   {
@@ -290,7 +272,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'HS-2024-019',
     country: 'South Korea',
-    ceo: 'Kim Yeon-chul',
     email: 'anna.taylor@hanwhasystems.com',
   },
   {
@@ -303,7 +284,6 @@ export const mockCustomers: Customer[] = [
     resellerId: 'reseller-vdfghj',
     companyId: 'LI-2024-020',
     country: 'South Korea',
-    ceo: 'Park Jeong-won',
     email: 'james.brown@lotteinno.com',
   },
   {
@@ -316,7 +296,6 @@ export const mockCustomers: Customer[] = [
     resellerId: 'reseller-megazone',
     companyId: 'SI-2024-021',
     country: 'South Korea',
-    ceo: 'Song Myung-seop',
     email: 'maria.garcia@shinsegae-inc.com',
   },
   {
@@ -329,7 +308,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'CO-2024-022',
     country: 'South Korea',
-    ceo: 'Park Jung-ho',
     email: 'chris.davis@olivenetworks.com',
   },
   {
@@ -342,7 +320,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'GS-2024-023',
     country: 'South Korea',
-    ceo: 'Kim Yong-hwan',
     email: 'jessica.miller@gsitm.com',
   },
   {
@@ -355,7 +332,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'DD-2024-024',
     country: 'South Korea',
-    ceo: 'Lee Jun-beom',
     email: 'kevin.rodriguez@doosandigital.com',
   },
   {
@@ -368,7 +344,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'HD-2024-025',
     country: 'South Korea',
-    ceo: 'Shin Hyun-woo',
     email: 'rachel.white@hanwhadata.com',
   },
   {
@@ -381,7 +356,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'WT-2024-026',
     country: 'South Korea',
-    ceo: 'Cho Byung-kyu',
     email: 'daniel.lopez@wooritech.com',
   },
   {
@@ -394,7 +368,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'KB-2024-027',
     country: 'South Korea',
-    ceo: 'Park Jong-kyoo',
     email: 'michelle.lee@kbdata.com',
   },
   {
@@ -407,7 +380,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'SD-2024-028',
     country: 'South Korea',
-    ceo: 'Jin Ok-dong',
     email: 'andrew.thompson@shinhands.com',
   },
   {
@@ -420,7 +392,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'IB-2024-029',
     country: 'South Korea',
-    ceo: 'Kim Sung-tae',
     email: 'sophia.martinez@ibksystems.com',
   },
   {
@@ -433,7 +404,6 @@ export const mockCustomers: Customer[] = [
     resellerId: undefined,
     companyId: 'NH-2024-030',
     country: 'South Korea',
-    ceo: 'Lee Dae-kyung',
     email: 'ryan.anderson@nhdigital.com',
   },
 ];
@@ -522,6 +492,7 @@ export const mockCustomerContractsDetailed: CustomerContract[] = [
     endDate: '2025. 12. 31',
     amount: '$12,000.00',
     status: 'active',
+    approvalStatus: 'approved',
     details: '10 nodes, Premium support',
   },
   {
@@ -544,6 +515,7 @@ export const mockCustomerContractsDetailed: CustomerContract[] = [
     endDate: '2024. 12. 31',
     amount: '$15,000.00',
     status: 'expired',
+    approvalStatus: 'approved',
     details: '20 nodes, Standard support',
   },
   {
@@ -555,6 +527,7 @@ export const mockCustomerContractsDetailed: CustomerContract[] = [
     endDate: '2026. 03. 01',
     amount: '$18,000.00',
     status: 'inactive',
+    approvalStatus: 'pending',
     details: '15 nodes, Enterprise support',
   },
   {
@@ -577,6 +550,7 @@ export const mockCustomerContractsDetailed: CustomerContract[] = [
     endDate: '2025. 12. 31',
     amount: '$10,000.00',
     status: 'active',
+    approvalStatus: 'approved',
     details: '8 nodes, Standard support',
   },
   {
@@ -588,6 +562,7 @@ export const mockCustomerContractsDetailed: CustomerContract[] = [
     endDate: '',
     amount: '$6,000.00',
     status: 'inactive',
+    approvalStatus: 'pending',
     details: '$0.12 per vCPU hour, Min $400/month',
   },
   {
@@ -599,6 +574,7 @@ export const mockCustomerContractsDetailed: CustomerContract[] = [
     endDate: '2024. 12. 31',
     amount: '$8,000.00',
     status: 'expired',
+    approvalStatus: 'approved',
     details: '10 nodes, Basic support',
   },
   {

@@ -40,7 +40,6 @@ export function EditCustomerModal({
     companyName: '',
     country: '',
     businessRegNo: '',
-    ceo: '',
     contactPerson: '',
     email: '',
   });
@@ -54,7 +53,6 @@ export function EditCustomerModal({
         companyName: customer.companyName || '',
         country: customer.country || '',
         businessRegNo: customer.businessRegNo || '',
-        ceo: customer.ceo || '',
         contactPerson: customer.contactPerson || '',
         email: customer.email || '',
       });
@@ -165,10 +163,6 @@ export function EditCustomerModal({
       }
     }
 
-    if (!formData.ceo.trim()) {
-      newErrors.ceo = t('editCustomerModal.ceoRequired');
-    }
-
     if (!formData.contactPerson.trim()) {
       newErrors.contactPerson = t('editCustomerModal.contactPersonRequired');
     }
@@ -191,7 +185,6 @@ export function EditCustomerModal({
       companyName: formData.companyName.trim(),
       country: formData.country,
       businessRegNo: formData.businessRegNo.trim(),
-      ceo: formData.ceo.trim(),
       contactPerson: formData.contactPerson.trim(),
       email: formData.email.trim(),
     };
@@ -269,24 +262,6 @@ export function EditCustomerModal({
               />
               {errors.businessRegNo && (
                 <p className="text-sm text-destructive mt-1">{errors.businessRegNo}</p>
-              )}
-            </div>
-          </div>
-
-          {/* CEO / Representative */}
-          <div className="flex flex-col gap-3">
-            <Label htmlFor="ceo" className="text-sm font-medium leading-5">
-              {t('editCustomerModal.ceoRepresentative')}
-            </Label>
-            <div>
-              <Input
-                id="ceo"
-                value={formData.ceo}
-                onChange={(e) => handleChange('ceo', e.target.value)}
-                className="h-9"
-              />
-              {errors.ceo && (
-                <p className="text-sm text-destructive mt-1">{errors.ceo}</p>
               )}
             </div>
           </div>

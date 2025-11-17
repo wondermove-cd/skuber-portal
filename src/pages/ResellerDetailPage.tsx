@@ -476,10 +476,6 @@ export default function ResellerDetailPage() {
                 <div className="text-card-foreground">{reseller.businessRegNo}</div>
               </div>
               <div className="flex items-center justify-between text-sm leading-5">
-                <div className="text-muted-foreground">{t('resellerDetail.ceoRepresentative')}</div>
-                <div className="text-card-foreground">{reseller.ceo}</div>
-              </div>
-              <div className="flex items-center justify-between text-sm leading-5">
                 <div className="text-muted-foreground">{t('common.contactPerson')}</div>
                 <div className="text-card-foreground">{reseller.contactPerson}</div>
               </div>
@@ -738,24 +734,26 @@ export default function ResellerDetailPage() {
                             )}
                           </div>
                           <div className="w-[173px] px-2 flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-                            {isPending ? (
-                              <>
-                                <Button size="sm" className="h-8 px-3 text-xs bg-foreground hover:bg-foreground/90 text-background">Approval</Button>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="h-8 px-3 text-xs"
-                                  onClick={() => handleRejectContract(contract)}
-                                >
-                                  Rejection
-                                </Button>
-                              </>
-                            ) : (
-                              <>
-                                <Button size="sm" className="h-8 px-3 text-xs bg-muted text-muted-foreground cursor-not-allowed" disabled>Approval</Button>
-                                <Button variant="outline" size="sm" className="h-8 px-3 text-xs opacity-50 cursor-not-allowed" disabled>Rejection</Button>
-                              </>
-                            )}
+                            {user?.role === 'wm_admin' || user?.role === 'wm_editor' ? (
+                              isPending ? (
+                                <>
+                                  <Button size="sm" className="h-8 px-3 text-xs bg-foreground hover:bg-foreground/90 text-background">Approval</Button>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 px-3 text-xs"
+                                    onClick={() => handleRejectContract(contract)}
+                                  >
+                                    Rejection
+                                  </Button>
+                                </>
+                              ) : (
+                                <>
+                                  <Button size="sm" className="h-8 px-3 text-xs bg-muted text-muted-foreground cursor-not-allowed" disabled>Approval</Button>
+                                  <Button variant="outline" size="sm" className="h-8 px-3 text-xs opacity-50 cursor-not-allowed" disabled>Rejection</Button>
+                                </>
+                              )
+                            ) : null}
                           </div>
                         </div>
                       );

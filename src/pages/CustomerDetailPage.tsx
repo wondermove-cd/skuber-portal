@@ -443,10 +443,6 @@ export function CustomerDetailPage() {
                 <div className="text-card-foreground">{customer.businessRegNo}</div>
               </div>
               <div className="flex items-center justify-between text-sm leading-5">
-                <div className="text-muted-foreground">{t('common.ceo')}</div>
-                <div className="text-card-foreground">{customer.ceo}</div>
-              </div>
-              <div className="flex items-center justify-between text-sm leading-5">
                 <div className="text-muted-foreground">{t('common.contactPerson')}</div>
                 <div className="text-card-foreground">{customer.contactPerson}</div>
               </div>
@@ -579,25 +575,9 @@ export function CustomerDetailPage() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-border">
-                      {user?.role === 'reseller_admin' || user?.role === 'reseller_viewer' ? (
-                        <>
-                          <th className="text-left text-sm font-medium text-muted-foreground h-10 px-2">{t('customers.contracts')}</th>
-                          <th className="text-left text-sm font-medium text-muted-foreground h-10 px-2">{t('customerDetail.daysLeft')}</th>
-                          <th className="text-left text-sm font-medium text-muted-foreground h-10 px-2">{t('contractDetail.status')}</th>
-                        </>
-                      ) : (
-                        <>
-                          <th className="text-left text-sm font-medium text-foreground h-10 px-2">{t('common.contractNo')}</th>
-                          <th className="text-left text-sm font-medium text-foreground h-10 px-2">{t('common.service')}</th>
-                          <th className="text-left text-sm font-medium text-foreground h-10 px-2">{t('common.pricingModel')}</th>
-                          <th className="text-left text-sm font-medium text-foreground h-10 px-2">{t('resellerDetail.vcpuUnitPrice')}</th>
-                          <th className="text-left text-sm font-medium text-foreground h-10 px-2">{t('resellerDetail.minimumCharge')}</th>
-                          <th className="text-left text-sm font-medium text-foreground h-10 px-2">{t('resellerDetail.contractAmount')}</th>
-                          <th className="text-left text-sm font-medium text-foreground h-10 px-2">{t('resellerDetail.includedAllocation')}</th>
-                          <th className="text-left text-sm font-medium text-foreground h-10 px-2">{t('common.submitted')}</th>
-                          <th className="text-left text-sm font-medium text-foreground h-10 px-2">{t('contractDetail.status')}</th>
-                        </>
-                      )}
+                      <th className="text-left text-sm font-medium text-foreground h-10 px-2">{t('customers.contracts')}</th>
+                      <th className="text-left text-sm font-medium text-foreground h-10 px-2 w-[110px]">{t('customerDetail.daysLeft')}</th>
+                      <th className="text-right text-sm font-medium text-foreground h-10 px-2 w-[140px]">{t('resellerDetail.contractAmount')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -617,129 +597,69 @@ export function CustomerDetailPage() {
                       // Calculate days left
                       const daysLeft = calculateDaysLeft(contract.endDate);
 
-                      // For reseller view
-                      if (user?.role === 'reseller_admin' || user?.role === 'reseller_viewer') {
-                        // Build contract details string
-                        const periodText = contract.endDate
-                          ? `${contract.startDate} - ${contract.endDate}`
-                          : `${contract.startDate} - ${t('common.noEndDate')}`;
+                      // Build contract details string
+                      const periodText = contract.endDate
+                        ? `${contract.startDate} - ${contract.endDate}`
+                        : `${contract.startDate} - ${t('common.noEndDate')}`;
 
-                        // Build pricing details
-                        let pricingDetails = '';
-                        if (isPayAsYouGo) {
-                          // Pay-as-you-go: show unit price
-                          const vcpuPrice = contract.details.split(',')[0]?.trim() || '';
-                          pricingDetails = `${contract.pricingModel} (${vcpuPrice})`;
-                        } else {
-                          // Fixed Rate: show amount and period
-                          const startYear = contract.startDate.split('.')[0].trim();
-                          const endYear = contract.endDate ? contract.endDate.split('.')[0].trim() : '';
-                          const yearDiff = endYear ? parseInt(endYear) - parseInt(startYear) : 0;
-                          const periodLabel = yearDiff > 0 ? `${yearDiff} year${yearDiff > 1 ? 's' : ''}` : '1 year';
-                          pricingDetails = `${contract.pricingModel} (${contract.amount} / ${periodLabel})`;
-                        }
-
-                        const contractDetails = `${contractId} · ${periodText} · ${pricingDetails}`;
-
-                        // Format days left display
-                        let daysLeftDisplay;
-                        if (daysLeft === null) {
-                          daysLeftDisplay = t('common.noEndDate');
-                        } else if (daysLeft < 0) {
-                          daysLeftDisplay = t('status.expired');
-                        } else {
-                          daysLeftDisplay = formatDaysLeft(daysLeft, t);
-                        }
-
-                        return (
-                          <tr
-                            key={contract.id}
-                            className="border-b border-border last:border-0 h-[72px] hover:bg-muted/50 cursor-pointer transition-colors"
-                            onClick={() => navigate(`/contract/${contractId}`)}
-                          >
-                            <td className="px-2">
-                              <div className="flex flex-col gap-1">
-                                <span className="text-sm font-semibold leading-5">{contract.serviceName}</span>
-                                <span className="text-sm text-muted-foreground leading-5">{contractDetails}</span>
-                              </div>
-                            </td>
-                            <td className="px-2 text-sm">
-                              {daysLeftDisplay}
-                            </td>
-                            <td className="px-2">
-                              {contract.status === 'active' && (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-green-100 border border-green-200">
-                                  <CircleCheckBig className="h-3 w-3 text-foreground" />
-                                  <span className="text-xs font-semibold text-foreground">{t('status.active')}</span>
-                                </span>
-                              )}
-                              {contract.status === 'inactive' && (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gray-100 border border-gray-200">
-                                  <CircleDashed className="h-3 w-3 text-foreground" />
-                                  <span className="text-xs font-semibold text-foreground">{t('status.inactive')}</span>
-                                </span>
-                              )}
-                              {contract.status === 'expired' && (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-red-100 border border-red-200">
-                                  <TriangleAlert className="h-3 w-3 text-foreground" />
-                                  <span className="text-xs font-semibold text-foreground">{t('status.expired')}</span>
-                                </span>
-                              )}
-                              {contract.status === 'pending' && (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-background border border-border">
-                                  <Loader className="h-3 w-3 text-foreground" />
-                                  <span className="text-xs font-semibold text-foreground">{t('status.pending')}</span>
-                                </span>
-                              )}
-                              {contract.status === 'rejected' && (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-red-100 border border-red-200">
-                                  <Ban className="h-3 w-3 text-foreground" />
-                                  <span className="text-xs font-semibold text-foreground">{t('status.rejected')}</span>
-                                </span>
-                              )}
-                            </td>
-                          </tr>
-                        );
+                      // Build pricing details
+                      let pricingDetails = '';
+                      if (isPayAsYouGo) {
+                        // Pay-as-you-go: show unit price
+                        const vcpuPrice = contract.details.split(',')[0]?.trim() || '';
+                        pricingDetails = `${contract.pricingModel} (${vcpuPrice})`;
+                      } else {
+                        // Fixed Rate: show amount and period
+                        const startYear = contract.startDate.split('.')[0].trim();
+                        const endYear = contract.endDate ? contract.endDate.split('.')[0].trim() : '';
+                        const yearDiff = endYear ? parseInt(endYear) - parseInt(startYear) : 0;
+                        const periodLabel = yearDiff > 0 ? `${yearDiff} year${yearDiff > 1 ? 's' : ''}` : '1 year';
+                        pricingDetails = `${contract.pricingModel} (${contract.amount} / ${periodLabel})`;
                       }
 
-                      // For WM Admin view
+                      // Determine reseller info
+                      const isReseller = user?.role === 'reseller_admin' || user?.role === 'reseller_viewer';
+                      const resellerText = !isReseller && contract.reseller && contract.reseller !== 'N/A'
+                        ? ` · Reseller: ${contract.reseller}`
+                        : ' · Direct';
+
+                      const contractDetails = `${contractId} · ${periodText} · ${pricingDetails}${resellerText}`;
+
+                      // Format days left display
+                      let daysLeftDisplay;
+                      if (daysLeft === null) {
+                        daysLeftDisplay = t('common.noEndDate');
+                      } else if (daysLeft < 0) {
+                        daysLeftDisplay = t('status.expired');
+                      } else {
+                        daysLeftDisplay = formatDaysLeft(daysLeft, t);
+                      }
+
+                      // Calculate amount to display
+                      const amountDisplay = isPayAsYouGo ? '-' : contract.amount;
+
                       return (
                         <tr
                           key={contract.id}
-                          className="border-b border-border last:border-0 h-[52px]"
+                          className="border-b border-border last:border-0 h-[72px] cursor-pointer hover:bg-accent transition-colors"
+                          onClick={() => navigate(`/contracts/${contract.id}`)}
                         >
-                          <td className="px-2 text-sm">{contractId}</td>
                           <td className="px-2">
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-background border border-border">
-                              <span className="text-xs font-semibold text-foreground">{contract.serviceName}</span>
-                            </span>
+                            <div className="flex flex-col gap-1">
+                              <span className="text-sm font-semibold leading-5">{contract.serviceName}</span>
+                              <span className="text-sm text-muted-foreground leading-5">{contractDetails}</span>
+                            </div>
                           </td>
-                          <td className="px-2 text-sm">{contract.pricingModel}</td>
-                          <td className="px-2 text-sm">{isPayAsYouGo ? contract.details.split(',')[0].trim() : '-'}</td>
-                          <td className="px-2 text-sm">{isPayAsYouGo ? contract.details.split(',')[1]?.trim() || '-' : '-'}</td>
-                          <td className="px-2 text-sm">{!isPayAsYouGo ? contract.amount : '-'}</td>
-                          <td className="px-2 text-sm">{!isPayAsYouGo ? contract.details || '-' : '-'}</td>
-                          <td className="px-2 text-sm">{contract.startDate}</td>
-                          <td className="px-2">
-                            {contract.status === 'active' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-green-100 border border-green-200">
-                                <CircleCheckBig className="h-3 w-3 text-foreground" />
-                                <span className="text-xs font-semibold text-foreground">Active</span>
-                              </span>
-                            )}
-                            {contract.status === 'inactive' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-gray-100 border border-gray-200">
-                                <CircleDashed className="h-3 w-3 text-foreground" />
-                                <span className="text-xs font-semibold text-foreground">Inactive</span>
-                              </span>
-                            )}
-                            {contract.status === 'expired' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-red-100 border border-red-200">
-                                <TriangleAlert className="h-3 w-3 text-foreground" />
-                                <span className="text-xs font-semibold text-foreground">Expired</span>
-                              </span>
+                          <td className="px-2 text-sm">
+                            {daysLeft !== null && daysLeft < 0 ? (
+                              <span className="text-destructive">{daysLeftDisplay}</span>
+                            ) : daysLeft !== null && daysLeft < 30 ? (
+                              <span className="text-orange-600 font-medium">{daysLeftDisplay}</span>
+                            ) : (
+                              daysLeftDisplay
                             )}
                           </td>
+                          <td className="px-2 text-sm text-right">{amountDisplay}</td>
                         </tr>
                       );
                     })}

@@ -92,7 +92,6 @@ export function CustomersPage() {
     countryCode: 'KR', // Default to South Korea
     companyName: '',
     businessRegNo: '',
-    ceoName: '',
     contactPerson: '',
     contactEmail: '',
     note: '',
@@ -101,7 +100,6 @@ export function CustomersPage() {
     countryCode?: string;
     companyName?: string;
     businessRegNo?: string;
-    ceoName?: string;
     contactPerson?: string;
     contactEmail?: string;
   }>({});
@@ -215,11 +213,6 @@ export function CustomersPage() {
         const validation = validateBusinessRegNo(customerFormData.countryCode, value);
         return validation.error;
 
-      case 'ceoName':
-        if (!value.trim()) return 'CEO/Representative name is required';
-        if (value.trim().length < 2) return 'Name must be at least 2 characters';
-        return undefined;
-
       case 'contactPerson':
         if (!value.trim()) return 'Contact person is required';
         if (value.trim().length < 2) return 'Name must be at least 2 characters';
@@ -256,7 +249,6 @@ export function CustomersPage() {
       countryCode: 'KR',
       companyName: '',
       businessRegNo: '',
-      ceoName: '',
       contactPerson: '',
       contactEmail: '',
       note: '',
@@ -295,7 +287,6 @@ export function CustomersPage() {
       customerFormData.countryCode !== '' &&
       customerFormData.companyName.trim() !== '' &&
       customerFormData.businessRegNo.trim() !== '' &&
-      customerFormData.ceoName.trim() !== '' &&
       customerFormData.contactPerson.trim() !== '' &&
       customerFormData.contactEmail.trim() !== '' &&
       Object.keys(formErrors).length === 0
@@ -318,7 +309,6 @@ export function CustomersPage() {
       contactPerson: customerFormData.contactPerson,
       email: customerFormData.contactEmail,
       country: selectedCountry?.name || customerFormData.countryCode,
-      ceo: customerFormData.ceoName,
       createdAt: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
       createdAtTimestamp: Date.now(),
       resellerId: isResellerUser ? user?.resellerId : undefined, // Set resellerId for reseller users
@@ -862,15 +852,15 @@ export function CustomersPage() {
             className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
           >
             <X className="h-4 w-4" />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">{t('common.close')}</span>
           </button>
           <DialogHeader>
-            <DialogTitle className="text-lg font-semibold">Filter</DialogTitle>
+            <DialogTitle className="text-lg font-semibold">{t('common.filter')}</DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-3">
-              <p className="text-sm font-medium text-foreground">Service</p>
+              <p className="text-sm font-medium text-foreground">{t('common.service')}</p>
               <div className="flex flex-col p-1">
                 {['Observability', 'Management', 'Optimization'].map((service) => {
                   const isSelected = selectedServices.includes(service);
@@ -901,17 +891,17 @@ export function CustomersPage() {
 
           <DialogFooter className="flex items-center justify-between sm:justify-between">
             <Button variant="outline" className="h-9 px-4 text-sm" onClick={handleFilterReset}>
-              Reset
+              {t('common.reset')}
             </Button>
             <div className="flex gap-2">
               <Button variant="outline" className="h-9 px-4 text-sm" onClick={handleFilterClose}>
-                Cancel
+                {t('common.cancel')}
               </Button>
               <Button
                 className="h-9 px-4 text-sm"
                 onClick={handleFilterApply}
               >
-                Apply
+                {t('common.apply')}
               </Button>
             </div>
           </DialogFooter>
@@ -1010,25 +1000,6 @@ export function CustomersPage() {
               />
               {formErrors.businessRegNo && (
                 <p className="text-sm text-destructive -mt-1">{formErrors.businessRegNo}</p>
-              )}
-            </div>
-
-            {/* CEO / Representative */}
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="ceoName" className="text-sm font-medium">
-                {t('customers.ceo')}
-              </Label>
-              <Input
-                id="ceoName"
-                value={customerFormData.ceoName}
-                onChange={(e) => handleCustomerInputChange('ceoName', e.target.value)}
-                onBlur={() => handleFieldBlur('ceoName')}
-                className="h-9"
-                placeholder={t('customers.enterCeo')}
-                aria-invalid={!!formErrors.ceoName}
-              />
-              {formErrors.ceoName && (
-                <p className="text-sm text-destructive -mt-1">{formErrors.ceoName}</p>
               )}
             </div>
 

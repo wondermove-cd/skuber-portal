@@ -62,8 +62,14 @@ export function ExpiringContractsList({
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="text-sm text-foreground py-2">
-                  {contract.daysLeft < 0 ? t('status.expired') : formatDaysLeft(contract.daysLeft, t)}
+                <TableCell className="text-sm py-2">
+                  {contract.daysLeft < 0 ? (
+                    <span className="text-destructive font-medium">{t('status.expired')}</span>
+                  ) : contract.daysLeft < 30 ? (
+                    <span className="text-orange-600 font-medium">{formatDaysLeft(contract.daysLeft, t)}</span>
+                  ) : (
+                    <span className="text-foreground">{formatDaysLeft(contract.daysLeft, t)}</span>
+                  )}
                 </TableCell>
                 <TableCell className="text-right py-2">
                   <button className="w-8 h-8 flex items-center justify-center rounded-md border border-input bg-background hover:bg-accent transition-colors">

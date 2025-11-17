@@ -40,7 +40,6 @@ export function EditResellerInfoModal({
     name: '',
     country: '',
     businessRegNo: '',
-    ceo: '',
     contactPerson: '',
     contactEmail: '',
   });
@@ -54,7 +53,6 @@ export function EditResellerInfoModal({
         name: reseller.name || '',
         country: reseller.country || '',
         businessRegNo: reseller.businessRegNo || '',
-        ceo: reseller.ceo || '',
         contactPerson: reseller.contactPerson || '',
         contactEmail: reseller.contactEmail || '',
       });
@@ -165,10 +163,6 @@ export function EditResellerInfoModal({
       }
     }
 
-    if (!formData.ceo.trim()) {
-      newErrors.ceo = t('editResellerInfo.ceoRequired');
-    }
-
     if (!formData.contactPerson.trim()) {
       newErrors.contactPerson = t('editResellerInfo.contactPersonRequired');
     }
@@ -191,7 +185,6 @@ export function EditResellerInfoModal({
       name: formData.name.trim(),
       country: formData.country,
       businessRegNo: formData.businessRegNo.trim(),
-      ceo: formData.ceo.trim(),
       contactPerson: formData.contactPerson.trim(),
       contactEmail: formData.contactEmail.trim(),
     };
@@ -269,24 +262,6 @@ export function EditResellerInfoModal({
               />
               {errors.businessRegNo && (
                 <p className="text-sm text-destructive mt-1">{errors.businessRegNo}</p>
-              )}
-            </div>
-          </div>
-
-          {/* CEO / Representative */}
-          <div className="flex flex-col gap-3">
-            <Label htmlFor="ceo" className="text-sm font-medium leading-5">
-              {t('editResellerInfo.ceoRepresentative')}
-            </Label>
-            <div>
-              <Input
-                id="ceo"
-                value={formData.ceo}
-                onChange={(e) => handleChange('ceo', e.target.value)}
-                className="h-9"
-              />
-              {errors.ceo && (
-                <p className="text-sm text-destructive mt-1">{errors.ceo}</p>
               )}
             </div>
           </div>

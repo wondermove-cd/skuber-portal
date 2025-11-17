@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -32,49 +33,9 @@ interface EditAccountModalProps {
 // Role display configuration
 type RoleOption = {
   value: string;
-  label: string;
-  description: string;
+  labelKey: string;
+  descriptionKey: string;
 };
-
-const wmRoleOptions: RoleOption[] = [
-  {
-    value: 'wm_admin',
-    label: 'Administrator',
-    description: 'Administrators have access and editing permissions for all menus.',
-  },
-  {
-    value: 'wm_editor',
-    label: 'Editor',
-    description:
-      'Editors have access and editing permissions to all menus except for the account management menu.',
-  },
-  {
-    value: 'wm_viewer',
-    label: 'Viewer',
-    description:
-      'Viewers cannot access the account management menu, but they have permission to view the rest of the menus.',
-  },
-];
-
-const resellerRoleOptions: RoleOption[] = [
-  {
-    value: 'reseller_admin',
-    label: 'Administrator',
-    description: 'Administrators have access and editing permissions for all menus.',
-  },
-  {
-    value: 'reseller_editor',
-    label: 'Editor',
-    description:
-      'Editors have access and editing permissions to all menus except for the account management menu.',
-  },
-  {
-    value: 'reseller_viewer',
-    label: 'Viewer',
-    description:
-      'Viewers cannot access the account management menu, but they have permission to view the rest of the menus.',
-  },
-];
 
 export function EditAccountModal({
   open,
@@ -83,10 +44,48 @@ export function EditAccountModal({
   account,
 }: EditAccountModalProps) {
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   // Determine available role options based on current user's role
   const isWMAdmin = user?.role === 'wm_admin';
   const isResellerAdmin = user?.role === 'reseller_admin';
+
+  const wmRoleOptions: RoleOption[] = [
+    {
+      value: 'wm_admin',
+      labelKey: 'settings.administrator',
+      descriptionKey: 'settings.adminDesc',
+    },
+    {
+      value: 'wm_editor',
+      labelKey: 'settings.editor',
+      descriptionKey: 'settings.editorDesc',
+    },
+    {
+      value: 'wm_viewer',
+      labelKey: 'settings.viewer',
+      descriptionKey: 'settings.viewerDesc',
+    },
+  ];
+
+  const resellerRoleOptions: RoleOption[] = [
+    {
+      value: 'reseller_admin',
+      labelKey: 'settings.administrator',
+      descriptionKey: 'settings.adminDesc',
+    },
+    {
+      value: 'reseller_editor',
+      labelKey: 'settings.editor',
+      descriptionKey: 'settings.editorDesc',
+    },
+    {
+      value: 'reseller_viewer',
+      labelKey: 'settings.viewer',
+      descriptionKey: 'settings.viewerDesc',
+    },
+  ];
+
   const roleOptions = isWMAdmin ? wmRoleOptions : resellerRoleOptions;
 
   // Map display role to UserRole
@@ -151,7 +150,7 @@ export function EditAccountModal({
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = t('settings.nameRequired');
     }
 
     setErrors(newErrors);
@@ -179,7 +178,7 @@ export function EditAccountModal({
       <DialogContent className="sm:max-w-[425px] gap-8 p-6">
         <DialogHeader className="gap-1.5">
           <DialogTitle className="text-lg font-semibold leading-none">
-            Edit Account
+            {t('common.edit')} {t('settings.account')}
           </DialogTitle>
         </DialogHeader>
 
@@ -187,7 +186,7 @@ export function EditAccountModal({
           {/* Email Field (Disabled) */}
           <div className="flex flex-col gap-3">
             <Label htmlFor="email" className="text-sm font-medium leading-5">
-              Email
+              {t('settings.email')}
             </Label>
             <Input
               id="email"
@@ -201,12 +200,12 @@ export function EditAccountModal({
           {/* Name Field */}
           <div className="flex flex-col gap-3">
             <Label htmlFor="name" className="text-sm font-medium leading-5">
-              Name
+              {t('settings.name')}
             </Label>
             <div>
               <Input
                 id="name"
-                placeholder="Enter name"
+                placeholder={t('settings.enterName')}
                 value={formData.name}
                 onChange={(e) => handleChange('name', e.target.value)}
                 className="h-9"
@@ -220,7 +219,7 @@ export function EditAccountModal({
           {/* Permission Type */}
           <div className="flex flex-col gap-3">
             <Label className="text-sm font-medium leading-5">
-              Permission Type
+              {t('settings.permissionType')}
             </Label>
             <RadioGroup
               value={formData.role}
@@ -242,10 +241,10 @@ export function EditAccountModal({
                   <RadioGroupItem value={option.value} className="mt-0.5" />
                   <div className="flex flex-col gap-1.5 flex-1">
                     <p className="text-sm font-medium leading-none text-foreground">
-                      {option.label}
+                      {t(option.labelKey)}
                     </p>
                     <p className="text-sm font-normal leading-5 text-muted-foreground">
-                      {option.description}
+                      {t(option.descriptionKey)}
                     </p>
                   </div>
                 </label>
@@ -261,14 +260,14 @@ export function EditAccountModal({
             onClick={() => onOpenChange(false)}
             className="h-9 px-4 py-2 text-sm font-medium"
           >
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button
             type="button"
             onClick={handleComplete}
             className="h-9 px-4 py-2 text-sm font-medium"
           >
-            Complete
+            {t('settings.complete')}
           </Button>
         </DialogFooter>
       </DialogContent>

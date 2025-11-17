@@ -698,18 +698,22 @@ export default function SettingsPage() {
                                 </DropdownMenuItem>
                               )}
                               {/* Edit - Permission rules:
-                                  - Super Admin: can edit anyone
-                                  - Regular Admin: can edit everyone (including other Admins)
+                                  - Admin: can edit all accounts
+                                  - Editor: can edit own account only
+                                  - Viewer: cannot edit (button hidden)
                               */}
-                              <DropdownMenuItem
-                                onClick={() => {
-                                  setSelectedAccount(account);
-                                  setEditAccountOpen(true);
-                                }}
-                              >
-                                <Pencil className="mr-2 h-4 w-4" />
-                                {t('common.edit')}
-                              </DropdownMenuItem>
+                              {(user?.role === 'wm_admin' || user?.role === 'reseller_admin' ||
+                                ((user?.role === 'wm_editor' || user?.role === 'reseller_editor') && account.name.includes('(Me)'))) && (
+                                <DropdownMenuItem
+                                  onClick={() => {
+                                    setSelectedAccount(account);
+                                    setEditAccountOpen(true);
+                                  }}
+                                >
+                                  <Pencil className="mr-2 h-4 w-4" />
+                                  {t('common.edit')}
+                                </DropdownMenuItem>
+                              )}
                               {/* Delegate Authority - only visible to Super Administrator for other accounts */}
                               {isSuperAdmin && !account.name.includes('(Me)') && (
                                 <DropdownMenuItem>

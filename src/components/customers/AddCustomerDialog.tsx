@@ -43,7 +43,6 @@ export function AddCustomerDialog({
     countryCode: 'KR',
     companyName: '',
     businessRegNo: '',
-    ceoName: '',
     contactPerson: '',
     contactEmail: '',
     note: '',
@@ -53,7 +52,6 @@ export function AddCustomerDialog({
     countryCode?: string;
     companyName?: string;
     businessRegNo?: string;
-    ceoName?: string;
     contactPerson?: string;
     contactEmail?: string;
   }>({});
@@ -76,11 +74,6 @@ export function AddCustomerDialog({
       case 'businessRegNo':
         const validation = validateBusinessRegNo(customerFormData.countryCode, value);
         return validation.error;
-
-      case 'ceoName':
-        if (!value.trim()) return t('validation.nameRequired');
-        if (value.trim().length < 2) return t('validation.nameMinLength');
-        return undefined;
 
       case 'contactPerson':
         if (!value.trim()) return t('validation.contactPersonRequired');
@@ -135,7 +128,6 @@ export function AddCustomerDialog({
       customerFormData.countryCode !== '' &&
       customerFormData.companyName.trim() !== '' &&
       customerFormData.businessRegNo.trim() !== '' &&
-      customerFormData.ceoName.trim() !== '' &&
       customerFormData.contactPerson.trim() !== '' &&
       customerFormData.contactEmail.trim() !== '' &&
       Object.keys(formErrors).length === 0
@@ -160,7 +152,6 @@ export function AddCustomerDialog({
       countryCode: 'KR',
       companyName: '',
       businessRegNo: '',
-      ceoName: '',
       contactPerson: '',
       contactEmail: '',
       note: '',
@@ -174,7 +165,6 @@ export function AddCustomerDialog({
       countryCode: 'KR',
       companyName: '',
       businessRegNo: '',
-      ceoName: '',
       contactPerson: '',
       contactEmail: '',
       note: '',
@@ -274,25 +264,6 @@ export function AddCustomerDialog({
             />
             {formErrors.businessRegNo && (
               <p className="text-sm text-destructive -mt-1">{formErrors.businessRegNo}</p>
-            )}
-          </div>
-
-          {/* CEO / Representative */}
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="ceoName" className="text-sm font-medium">
-              {t('customers.ceo')}
-            </Label>
-            <Input
-              id="ceoName"
-              value={customerFormData.ceoName}
-              onChange={(e) => handleInputChange('ceoName', e.target.value)}
-              onBlur={() => handleFieldBlur('ceoName')}
-              className="h-9"
-              placeholder={t('customers.enterCeo')}
-              aria-invalid={!!formErrors.ceoName}
-            />
-            {formErrors.ceoName && (
-              <p className="text-sm text-destructive -mt-1">{formErrors.ceoName}</p>
             )}
           </div>
 

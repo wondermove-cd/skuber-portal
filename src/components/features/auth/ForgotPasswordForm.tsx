@@ -67,6 +67,9 @@ export function ForgotPasswordForm() {
       // Simulate API call to send verification code
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
+      // Store email in sessionStorage for use in expired code page
+      sessionStorage.setItem('resetPasswordEmail', data.email);
+
       // Navigate to verify code page
       navigate('/verify-code');
     } catch (err) {
@@ -137,8 +140,9 @@ export function ForgotPasswordForm() {
                 )}
               </Button>
 
-              <div className="text-sm text-center">
-                <span className="text-muted-foreground">{t('auth.forgotPassword.doYouWantToSignIn')} </span>
+              <div className="text-sm text-center text-muted-foreground">
+                {t('auth.forgotPassword.doYouWantToSignIn')}
+                <br />
                 <button
                   type="button"
                   onClick={handleBackToLogin}

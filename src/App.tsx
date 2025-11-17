@@ -6,6 +6,7 @@ import { LoginPage } from '@/pages/LoginPage';
 import ForgotPasswordPage from '@/pages/ForgotPasswordPage';
 import VerifyCodePage from '@/pages/VerifyCodePage';
 import ResetPasswordPage from '@/pages/ResetPasswordPage';
+import ExpiredCodePage from '@/pages/ExpiredCodePage';
 import ResellerSignupPage from '@/pages/ResellerSignupPage';
 import UserSignupPage from '@/pages/UserSignupPage';
 import { DashboardLayout } from '@/pages/DashboardLayout';
@@ -44,6 +45,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/verify-code" element={<VerifyCodePage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/expired-code" element={<ExpiredCodePage />} />
           <Route path="/reseller-signup" element={<ResellerSignupPage />} />
           <Route path="/user-signup" element={<UserSignupPage />} />
 

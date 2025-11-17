@@ -47,6 +47,9 @@ interface AddContractModalProps {
   initialStep?: 1 | 2 | 3 | 4 | 5;
   onContractAdded?: (deleteRejected: boolean) => void;
   rejectedContractId?: string;
+  editMode?: boolean;
+  existingContract?: any;
+  onContractEdited?: () => void;
 }
 
 export function AddContractModal({
@@ -57,7 +60,10 @@ export function AddContractModal({
   initialCustomerId,
   initialStep = 1,
   onContractAdded,
-  rejectedContractId
+  rejectedContractId,
+  editMode = false,
+  existingContract,
+  onContractEdited
 }: AddContractModalProps) {
   const { toast } = useToast();
   const { user } = useAuth();
@@ -73,7 +79,6 @@ export function AddContractModal({
     countryCode: 'KR',
     companyName: '',
     businessRegNo: '',
-    ceoName: '',
     contactPerson: '',
     contactEmail: '',
     note: '',
@@ -83,7 +88,6 @@ export function AddContractModal({
     countryCode?: string;
     companyName?: string;
     businessRegNo?: string;
-    ceoName?: string;
     contactPerson?: string;
     contactEmail?: string;
   }>({});
@@ -184,8 +188,113 @@ export function AddContractModal({
         setStep(initialStep);
         setFirstStep(initialStep);
       }
+
+      // Initialize form with existing contract data in edit mode or when rejected contract exists
+      if (existingContract && (editMode || existingContract.approvalStatus === 'rejected')) {
+        // Set service
+        const serviceMap: Record<string, string> = {
+          'Observability': 'observability',
+          'Optimization': 'optimization',
+          'Management': 'management',
+        };
+        setSelectedService(serviceMap[existingContract.serviceName] || '');
+
+        // Set pricing model - convert from display name to internal value
+        const pricingModelMap: Record<string, string> = {
+          'Fixed Rate': 'fixed',
+          'Pay-as-you-go': 'payg',
+          'Trial': 'trial',
+        };
+        setSelectedPricingModel(pricingModelMap[existingContract.pricingModel] || existingContract.pricingModel.toLowerCase());
+
+        // Parse dates
+        const parseDate = (dateStr: string) => {
+          if (!dateStr) return undefined;
+          const parts = dateStr.split('.').map(p => p.trim());
+          if (parts.length === 3) {
+            return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+          }
+          return undefined;
+        };
+
+        if (existingContract.pricingModel === 'Fixed Rate') {
+          // Fixed Rate data
+          setStartDate(parseDate(existingContract.startDate));
+          setEndDate(parseDate(existingContract.endDate));
+
+          // Extract contract amount from billingInfo or amount field
+          if (existingContract.billingInfo && 'contractAmount' in existingContract.billingInfo) {
+            const amountStr = String(existingContract.billingInfo.contractAmount);
+            const amountMatch = amountStr.match(/\$?([0-9,]+)/);
+            if (amountMatch) setContractAmount(amountMatch[1]);
+
+            // Extract included allocation
+            if ('includedAllocation' in existingContract.billingInfo) {
+              setIncludedAllocation(String(existingContract.billingInfo.includedAllocation));
+            }
+
+            // Set tax included
+            if ('taxIncluded' in existingContract.billingInfo) {
+              setTaxIncluded(existingContract.billingInfo.taxIncluded);
+            }
+          } else {
+            // Fallback to parsing amount and details strings
+            const amountStr = existingContract.amount || '';
+            const amountMatch = amountStr.match(/\$?([0-9,]+)/);
+            if (amountMatch) setContractAmount(amountMatch[1]);
+
+            const details = existingContract.details || '';
+            const allocationMatch = details.match(/([0-9,]+)\s*vCPU/);
+            if (allocationMatch) setIncludedAllocation(allocationMatch[1]);
+          }
+
+          // Calculate term from dates
+          const start = parseDate(existingContract.startDate);
+          const end = parseDate(existingContract.endDate);
+          if (start && end) {
+            const years = end.getFullYear() - start.getFullYear();
+            if (years === 1 || years === 3 || years === 5) {
+              setContractTerm(years as 1 | 3 | 5);
+            }
+          }
+        } else if (existingContract.pricingModel === 'Pay-as-you-go') {
+          // PAYG data
+          setPaygStartDate(parseDate(existingContract.startDate));
+          if (existingContract.endDate) {
+            setSetEndDateEnabled(true);
+            setPaygEndDate(parseDate(existingContract.endDate));
+          } else {
+            setSetEndDateEnabled(false);
+            setPaygEndDate(undefined);
+          }
+
+          // Try to get values from billingInfo first, then fall back to parsing details
+          if (existingContract.billingInfo && 'vcpuUnitPrice' in existingContract.billingInfo) {
+            // Extract number from "$1000 / hour" format
+            const vcpuStr = String(existingContract.billingInfo.vcpuUnitPrice);
+            const vcpuMatch = vcpuStr.match(/\$?([0-9,]+)/);
+            if (vcpuMatch) setVcpuUnitPrice(vcpuMatch[1]);
+
+            const minStr = String(existingContract.billingInfo.minimumCharge || '');
+            const minMatch = minStr.match(/\$?([0-9,]+)/);
+            if (minMatch) setMinimumCharge(minMatch[1]);
+
+            // Set tax included
+            if ('taxIncluded' in existingContract.billingInfo) {
+              setPaygTaxIncluded(existingContract.billingInfo.taxIncluded);
+            }
+          } else {
+            // Fallback: Parse details string
+            const details = existingContract.details || '';
+            const vcpuMatch = details.match(/\$([0-9,]+)\s*\/\s*vCPU/);
+            const minMatch = details.match(/Minimum\s*\$([0-9,]+)/);
+            if (vcpuMatch) setVcpuUnitPrice(vcpuMatch[1]);
+            if (minMatch) setMinimumCharge(minMatch[1]);
+          }
+        }
+      }
     }
-  }, [open, initialCustomerId, initialStep]);
+  }, [open, initialCustomerId, initialStep, editMode, existingContract]);
 
   // Filter customers based on search query
   const filteredCustomers = customers.filter((customer) =>
@@ -407,11 +516,6 @@ export function AddContractModal({
         const validation = validateBusinessRegNo(customerFormData.countryCode, value);
         return validation.error;
 
-      case 'ceoName':
-        if (!value.trim()) return t('addContract.ceoRequired');
-        if (value.trim().length < 2) return t('addContract.nameMinLength');
-        return undefined;
-
       case 'contactPerson':
         if (!value.trim()) return t('addContract.contactPersonRequired');
         if (value.trim().length < 2) return t('addContract.nameMinLength');
@@ -465,7 +569,6 @@ export function AddContractModal({
       customerFormData.countryCode !== '' &&
       customerFormData.companyName.trim() !== '' &&
       customerFormData.businessRegNo.trim() !== '' &&
-      customerFormData.ceoName.trim() !== '' &&
       customerFormData.contactPerson.trim() !== '' &&
       customerFormData.contactEmail.trim() !== '' &&
       Object.keys(formErrors).length === 0
@@ -500,7 +603,6 @@ export function AddContractModal({
         contactPerson: customerFormData.contactPerson,
         email: customerFormData.contactEmail,
         country: selectedCountry?.name || customerFormData.countryCode,
-        ceo: customerFormData.ceoName,
         createdAt: new Date().toISOString().split('T')[0],
         createdAtTimestamp: Date.now(),
         resellerId: isResellerUser ? user?.resellerId : undefined,
@@ -516,7 +618,6 @@ export function AddContractModal({
         contactPerson: customerFormData.contactPerson,
         email: customerFormData.contactEmail,
         country: selectedCountry?.name || customerFormData.countryCode,
-        ceo: customerFormData.ceoName,
         createdAtTimestamp: Date.now(),
       });
 
@@ -628,8 +729,19 @@ export function AddContractModal({
         createdAtTimestamp: Date.now(), // Add timestamp for "New" badge
       };
 
-      // Add new contract to the list
-      const updatedContracts = [newContract, ...existingContracts];
+      // Handle edit mode: delete old contract and add new one with pending status
+      let updatedContracts;
+      if (editMode && existingContract) {
+        // Remove the old contract
+        updatedContracts = existingContracts.filter((c: any) => c.id !== existingContract.id);
+        // Add new contract with pending approval status
+        newContract.approvalStatus = 'pending';
+        newContract.status = 'inactive';
+        updatedContracts = [newContract, ...updatedContracts];
+      } else {
+        // Normal mode: just add new contract
+        updatedContracts = [newContract, ...existingContracts];
+      }
       localStorage.setItem('contracts', JSON.stringify(updatedContracts));
 
       // Create contract details for detail page
@@ -712,6 +824,12 @@ export function AddContractModal({
       const existingContractDetails = JSON.parse(
         localStorage.getItem('contractDetails') || '{}'
       );
+
+      // If edit mode, delete old contract details
+      if (editMode && existingContract) {
+        delete existingContractDetails[existingContract.id];
+      }
+
       existingContractDetails[newContractId] = contractDetail;
       localStorage.setItem('contractDetails', JSON.stringify(existingContractDetails));
 
@@ -730,18 +848,30 @@ export function AddContractModal({
       }
 
       // Show success toast
-      toast({
-        title: t('addContract.contractSubmitted'),
-        description: t('addContract.contractCreated', { companyName }),
-      });
+      if (editMode) {
+        toast({
+          title: t('addContract.contractUpdated'),
+          description: t('addContract.contractUpdatePending', { companyName }),
+        });
+
+        // Call onContractEdited callback if provided
+        if (onContractEdited) {
+          onContractEdited();
+        }
+      } else {
+        toast({
+          title: t('addContract.contractSubmitted'),
+          description: t('addContract.contractCreated', { companyName }),
+        });
+
+        // Call onContractAdded callback if provided
+        if (onContractAdded) {
+          onContractAdded(deleteRejectedContract);
+        }
+      }
 
       // Trigger page reload to update the contracts list
       window.dispatchEvent(new Event('storage'));
-
-      // Call onContractAdded callback if provided
-      if (onContractAdded) {
-        onContractAdded(deleteRejectedContract);
-      }
 
       // Close modal after submission
       handleOpenChange(false);
@@ -781,7 +911,6 @@ export function AddContractModal({
         countryCode: 'KR',
         companyName: '',
         businessRegNo: '',
-        ceoName: '',
         contactPerson: '',
         contactEmail: '',
         note: '',
@@ -842,7 +971,7 @@ export function AddContractModal({
         {/* Header */}
         <div className={`flex flex-col gap-1.5 ${initialStep === 3 ? 'mb-4' : 'mb-6'}`}>
           <h2 className="text-lg font-semibold leading-none">
-            {step === 2 ? t('customers.addCustomer') : t('addContract.title')}
+            {step === 2 ? t('customers.addCustomer') : (editMode ? t('addContract.editTitle') : t('addContract.title'))}
           </h2>
           {step === 1 && (
             <p className="text-sm text-muted-foreground leading-5">
@@ -1056,24 +1185,6 @@ export function AddContractModal({
               )}
             </div>
 
-            {/* CEO / Representative */}
-            <div className="flex flex-col gap-3">
-              <Label htmlFor="ceoName" className="text-sm font-medium">
-                {t('common.ceo')}
-              </Label>
-              <Input
-                id="ceoName"
-                value={customerFormData.ceoName}
-                onChange={(e) => handleInputChange('ceoName', e.target.value)}
-                onBlur={() => handleFieldBlur('ceoName')}
-                className="h-9"
-                placeholder={t('customers.enterCeo')}
-                aria-invalid={!!formErrors.ceoName}
-              />
-              {formErrors.ceoName && (
-                <p className="text-sm text-destructive -mt-1">{formErrors.ceoName}</p>
-              )}
-            </div>
 
             {/* Contact Person */}
             <div className="flex flex-col gap-3">

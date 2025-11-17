@@ -247,6 +247,11 @@ export function ContractsPage() {
 
   // Filter contracts based on search and all filters
   let filteredContracts = contracts.filter((contract) => {
+    // Filter out cancelled contracts
+    if (contract.approvalStatus === 'cancelled') {
+      return false;
+    }
+
     // Role filter - Reseller users can only see their own contracts, WM users only see Direct contracts
     const matchesRole = isResellerUser
       ? contract.resellerId === user?.resellerId  // Reseller users: only their contracts

@@ -193,12 +193,13 @@ export function ResetPasswordForm() {
                 )}
               </Button>
 
-              <div className="text-sm text-center">
-                <span className="text-muted-foreground">{t('auth.forgotPassword.doYouWantToSignIn')} </span>
+              <div className="text-sm text-center text-muted-foreground">
+                {t('auth.forgotPassword.doYouWantToSignIn')}
+                <br />
                 <button
                   type="button"
                   onClick={handleBackToLogin}
-                  className="text-muted-foreground hover:text-foreground underline"
+                  className="text-foreground hover:underline underline"
                 >
                   {t('auth.resetPassword.backToLogin')}
                 </button>

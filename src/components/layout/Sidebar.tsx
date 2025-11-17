@@ -183,10 +183,10 @@ export function Sidebar() {
         <AlertDialogContent className="bg-card border-border p-6 rounded-lg gap-4">
           <AlertDialogHeader className="gap-2">
             <AlertDialogTitle className="text-lg font-semibold text-foreground">
-              Logout
+              {t('common.logout')}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-sm text-muted-foreground">
-              Are you sure you want to logout?
+              {t('common.logoutConfirm')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-2 justify-end">
@@ -194,13 +194,13 @@ export function Sidebar() {
               onClick={() => setIsLogoutDialogOpen(false)}
               className="h-9 px-4 py-2 text-sm font-medium rounded-md bg-secondary border border-border text-secondary-foreground hover:bg-accent transition-colors"
             >
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               onClick={handleLogoutConfirm}
               className="h-9 px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
             >
-              Logout
+              {t('common.logout')}
             </button>
           </AlertDialogFooter>
         </AlertDialogContent>
