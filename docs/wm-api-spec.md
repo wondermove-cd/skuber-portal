@@ -229,52 +229,29 @@
 
 ---
 
-### 📊 Reject Contract Modal
+### 📊 계약 거절 모달
 
 **트리거:** Contract Pending Approval에서 "Reject" 버튼 클릭
+**접근 권한:** `wm_admin`, `wm_editor`
 
-#### 모달 구조
+**📄 전체 상세 명세**: [common-api-spec.md - Section 4.6](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/common-api-spec.md#46-reject-contract-modal-계약-거절-모달)
 
-**섹션 1: 제목**
-- "Reject Contract"
+#### 빠른 참조
 
-**섹션 2: 계약 정보 표시**
-- Reseller → Customer (시각적 플로우)
-- Contract ID, Service, Pricing Model, Contract Period
+**표시 정보:**
+- 계약 정보: Reseller → Customer, Service, Pricing Model, Contract Period
 - Pay-as-you-go: vCPU Unit Price, Minimum Charge
 - Fixed Rate: Amount to WM, Included Allocation
-- Tax Included
 
-**섹션 3: Rejection Reason 입력**
-- Textarea (최대 280자)
-- 실시간 글자 수 표시 (예: "120/280 characters")
+**필수 입력:**
+- Rejection Reason (Textarea, 최대 280자, 실시간 글자 수 표시)
 
-**인터랙션:**
-- "Cancel" 버튼: 모달 닫기
-- "Submit" 버튼: 거절 사유 제출 → 계약 status → 'rejected'
+**API**: `POST /api/contracts/{contractId}/reject`
 
-**조건/규칙:**
-- **Submit 버튼 활성화**: reason.length > 0
-- **Submit 버튼 비활성화**: reason.length === 0
-
-**유효성 검증:**
-
-| 필드 | 규칙 | 에러 메시지 (EN) | 에러 메시지 (KO) |
-|------|------|------------------|------------------|
-| reason | 필수 | Required | 필수 입력 |
-| reason | 최대 280자 | Max 280 characters | 최대 280자 |
-
-**데이터 요구사항 (제출):**
-
-**API Endpoint:** `POST /api/contracts/{contractId}/reject`
-
-**요청 필드:**
-| 필드 | 타입 | 설명 |
-|------|------|------|
-| reason | string | 거절 사유 |
-
-**응답:**
-- 성공 시: 계약 status 업데이트 확인
+**Submit 동작:**
+- 계약 status를 'rejected'로 변경
+- Toast 알림 표시
+- 대시보드 데이터 새로고침
 
 ---
 
@@ -672,6 +649,28 @@ const [rejectionError, setRejectionError] = useState('');
 **조건/규칙:**
 - **Edit 버튼**: `wm_admin`, `wm_editor`만 표시
 
+### 📊 고객사 수정 모달
+
+**트리거:** Edit 버튼 클릭
+**접근 권한:** `wm_admin`, `wm_editor` (Reseller는 불가)
+
+**📄 전체 상세 명세**: [common-api-spec.md - Section 4.8](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/common-api-spec.md#48-edit-customer-modal-고객사-수정-모달)
+
+#### 빠른 참조
+
+**수정 가능 필드:**
+- Company Name (최소 2자, 중복 체크)
+- Country (드롭다운 선택)
+- Business Reg. No. (국가별 형식 검증)
+- Contact Person (필수)
+- Contact Person Email (이메일 형식)
+
+**API**: `PUT /api/customers/{id}`
+
+**Submit 동작:** 고객 정보 업데이트 후 모달 닫기, 페이지 데이터 새로고침
+
+---
+
 **데이터 요구사항:**
 
 **API Endpoint:** `GET /api/customers/{customerId}`
@@ -744,6 +743,34 @@ const [rejectionError, setRejectionError] = useState('');
   - 30일 미만: 주황색
   - 30일 이상: 기본색
 - **Empty State**: 계약 없을 때 "No contracts yet" 메시지
+
+### 📊 계약 추가 모달
+
+**트리거:** Add Contract 버튼 클릭
+**접근 권한:** WM - `wm_admin`, `wm_editor` | Reseller - `reseller_admin`, `reseller_editor`
+
+**📄 전체 상세 명세**: [common-api-spec.md - Section 4.10](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/common-api-spec.md#410-add-contract-modal-계약-추가-모달)
+
+#### 빠른 참조
+
+**구조:** 멀티스텝 모달 (최대 5단계)
+
+**단계별 흐름:**
+1. **고객 선택**: 기존 고객 검색 및 선택 (현재 페이지에서는 자동 스킵)
+2. **새 고객 추가** (옵션): "Add Customer First" 링크 클릭 시
+3. **서비스 & 가격 모델**: Service 선택, Pricing Model 선택
+4. **가격 설정**: Fixed Rate/PAYG별 가격 입력
+5. **검토 & 생성**: 입력 정보 확인 후 생성
+
+**주요 기능:**
+- Reseller 사용자: 가격 정책이 설정된 서비스만 선택 가능
+- Fixed Rate: 계약 기간, 월 금액, vCPU 단가 입력
+- Pay-as-you-go: vCPU 단가만 입력
+- Trial: 체험판 기간 선택 (1개월/3개월/6개월)
+
+**API**: `POST /api/contracts`
+
+---
 
 **데이터 요구사항:**
 
@@ -849,6 +876,33 @@ const [rejectionError, setRejectionError] = useState('');
 - **Filter 버튼**: 필터 적용 시 배지 표시 (1)
 - **Add Reseller 버튼**: `wm_admin`, `wm_editor`만 표시
 - **Export to Excel**: 모든 역할 표시
+
+### 📊 리셀러 추가 모달
+
+**트리거:** Add Reseller 버튼 클릭
+**접근 권한:** `wm_admin`, `wm_editor`
+
+**📄 전체 상세 명세**: [common-api-spec.md - Section 4.5](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/common-api-spec.md#45-add-reseller-modal-리셀러-추가-모달)
+
+#### 빠른 참조
+
+**필수 입력:**
+- Company Name (최소 2자)
+- Country (드롭다운, 기본값: KR)
+- Business Reg. No. (국가별 형식 검증)
+- Contact Person (최소 2자)
+- Contact Person Email (이메일 형식)
+
+**선택 입력:**
+- Note (최대 280자)
+
+**API**: `POST /api/resellers`
+
+**Submit 동작:**
+1. Reseller 생성
+2. 초대 이메일 자동 발송 (Contact Person Email로)
+3. invitationStatus: 'Pending'으로 설정
+4. Toast 알림 표시
 
 ---
 
@@ -1039,6 +1093,53 @@ const [rejectionError, setRejectionError] = useState('');
 
 **조건/규칙:**
 - **Edit 버튼**: `wm_admin`, `wm_editor`만 표시
+
+### 📊 리셀러 정보 수정 모달
+
+**트리거:** Edit 버튼 (Info) 클릭
+**접근 권한:** `wm_admin`, `wm_editor`
+
+**📄 전체 상세 명세**: [common-api-spec.md - Section 4.9](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/common-api-spec.md#49-edit-reseller-info-modal-리셀러-정보-수정-모달)
+
+#### 빠른 참조
+
+**수정 가능 필드:**
+- Company Name (최소 2자, 중복 체크)
+- Country (드롭다운 선택)
+- Business Reg. No. (국가별 형식 검증)
+- Contact Person (필수)
+- Contact Person Email (이메일 형식)
+
+**API**: `PUT /api/resellers/{id}`
+
+**Submit 동작:** Reseller 정보 업데이트 후 모달 닫기, 페이지 데이터 새로고침
+
+---
+
+### 📊 청구서 이메일 수정 모달
+
+**트리거:** Edit 버튼 (Billing Emails) 클릭
+**접근 권한:** `wm_admin`, `wm_editor`
+
+**📄 전체 상세 명세**: [common-api-spec.md - Section 4.2](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/common-api-spec.md#42-edit-billing-emails-modal-청구서-이메일-수정-모달)
+
+#### 빠른 참조
+
+**기능:**
+- 기존 이메일 목록 표시
+- 새 이메일 추가 (+ Add Email)
+- 이메일 삭제 (X 아이콘)
+
+**유효성 검증:**
+- 이메일 형식 검증
+- 중복 방지
+- 최소 1개 이메일 필수
+
+**API**: `PUT /api/resellers/{id}/billing-emails`
+
+**Submit 동작:** 청구서 이메일 목록 업데이트 후 모달 닫기
+
+---
 
 **데이터 요구사항:**
 
@@ -1766,6 +1867,35 @@ difference = billedAmount - paidAmount;
 - **Add Contract 버튼**: `wm_admin`, `wm_editor`만 표시
 - **Export to Excel**: 모든 역할 표시
 
+### 📊 계약 추가 모달
+
+**트리거:** Add Contract 버튼 클릭
+**접근 권한:** `wm_admin`, `wm_editor`
+
+**📄 전체 상세 명세**: [common-api-spec.md - Section 4.10](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/common-api-spec.md#410-add-contract-modal-계약-추가-모달)
+
+#### 빠른 참조
+
+**구조:** 멀티스텝 모달 (최대 5단계)
+
+**단계별 흐름:**
+1. **고객 선택**: 기존 고객 검색 및 선택, "Add Customer First" 링크로 신규 고객 추가 가능
+2. **새 고객 추가** (옵션): "Add Customer First" 링크 클릭 시
+3. **서비스 & 가격 모델**: Service 선택, Pricing Model 선택 (Fixed Rate / Pay-as-you-go / Trial)
+4. **가격 설정**: 가격 모델별 가격 입력 (월 금액, vCPU 단가 등)
+5. **검토 & 생성**: 입력 정보 확인 후 생성
+
+**주요 필드:**
+- Service: Skuber⁺ Management / Observability / Optimization
+- Pricing Model: Fixed Rate / Pay-as-you-go / Trial
+- Fixed Rate: 계약 기간, 월 금액 (USD), vCPU 단가
+- Pay-as-you-go: vCPU 단가만
+- Trial: 체험 기간 (1/3/6개월)
+
+**API**: `POST /api/contracts`
+
+**Submit 동작:** 계약 생성 후 Contract Detail 페이지로 이동
+
 ---
 
 #### 섹션 3: Status Tabs
@@ -2270,6 +2400,32 @@ const [deleteConfirm, setDeleteConfirm] = useState<{
 **조건/규칙:**
 - **Create Account 버튼**: `wm_admin`만 표시
 
+### 📊 계정 생성 모달
+
+**트리거:** Create Account 버튼 클릭
+**접근 권한:** `wm_admin`만 (WM) | `reseller_admin`만 (Reseller)
+
+**📄 전체 상세 명세**: [common-api-spec.md - Section 4.7](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/common-api-spec.md#47-create-account-modal-계정-생성-모달)
+
+#### 빠른 참조
+
+**필수 입력:**
+- Email (이메일 형식, 중복 체크)
+- Name (최소 2자)
+- Permission Type (Radio 선택: Admin / Editor / Viewer)
+
+**역할별 권한:**
+- **Administrator**: 모든 메뉴 접근 및 편집
+- **Editor**: 계정 관리 메뉴 제외, 나머지 접근 및 편집
+- **Viewer**: 계정 관리 메뉴 제외, 나머지 조회만
+
+**API**: `POST /api/settings/accounts`
+
+**Submit 동작:**
+1. 계정 생성
+2. 임시 비밀번호 생성
+3. Temporary Password Dialog 표시 (복사 가능)
+
 ---
 
 #### 섹션 2: Accounts Table
@@ -2294,6 +2450,29 @@ const [deleteConfirm, setDeleteConfirm] = useState<{
   - `wm_editor`: 자신의 계정에만 표시
   - `wm_viewer`: 버튼 숨김 (조회 전용)
 - **Empty State**: 계정 없을 때 "No accounts found" 메시지
+
+### 📊 계정 수정 모달
+
+**트리거:** Edit 버튼 클릭
+**접근 권한:**
+- WM: `wm_admin` (모든 계정), `wm_editor` (자신만)
+- Reseller: `reseller_admin` (모든 계정), `reseller_editor` (자신만)
+
+**📄 전체 상세 명세**: [common-api-spec.md - Section 4.9](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/common-api-spec.md#49-edit-account-modal-계정-수정-모달)
+
+#### 빠른 참조
+
+**수정 가능 필드:**
+- **Admin이 다른 계정 수정**: Name, Permission Type
+- **자신의 계정 수정**: Name만 (Permission Type 변경 불가)
+
+**Email:** 읽기 전용 (수정 불가)
+
+**API**: `PUT /api/settings/accounts/{id}`
+
+**Submit 동작:** 계정 정보 업데이트 후 모달 닫기, 테이블 새로고침
+
+---
 
 **데이터 요구사항:**
 
