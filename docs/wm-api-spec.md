@@ -575,7 +575,7 @@ const [rejectionError, setRejectionError] = useState('');
 
 ---
 
-### 📊 Filter Dialog
+### 📊 필터 다이얼로그
 
 **트리거:** Filter 버튼 클릭
 
@@ -599,68 +599,30 @@ const [rejectionError, setRejectionError] = useState('');
 
 ---
 
-### 📊 Add Customer Dialog
+### 📊 고객 추가 다이얼로그
 
 **트리거:** Add Customer 버튼 클릭
 
-#### 다이얼로그 구조
+**📄 전체 상세 명세**: [common-api-spec.md - Section 4.14](https://github.com/wondermove-cd/skuber-portal/blob/main/docs/common-api-spec.md#414-add-customer-dialog)
 
-**섹션 1: 제목**
-- "Add Customer"
+#### 빠른 참조
 
-**섹션 2: 입력 폼**
-- Company Name (필수)
-- Country (필수, 드롭다운)
-- Business Reg. No. (필수, 국가별 형식)
-- Contact Person (필수)
-- Contact Person Email (필수)
-- Note (선택, 최대 280자)
+**필수 입력:**
+- Company Name (최소 2자)
+- Country (드롭다운, 기본값: KR)
+- Business Reg. No. (국가별 형식 검증)
+- Contact Person (최소 2자)
+- Contact Email (이메일 형식)
 
-**섹션 3: 옵션**
-- 체크박스: "Add contract after saving"
+**선택 입력:**
+- Note (최대 280자)
+- "Add contract after saving" 체크박스 (기본 체크됨)
 
-**인터랙션:**
-- Country 선택: Business Reg. No. placeholder 변경
-- 필드 입력: 실시간 validation
-- 필드 blur: validation 에러 표시
-- Cancel 버튼: 다이얼로그 닫기
-- Submit 버튼: 고객 생성 → 체크박스 체크 시 Add Contract Modal 열기
+**API**: `POST /api/customers`
 
-**조건/규칙:**
-- **Submit 버튼 활성화**: 모든 필수 필드 입력 + validation 통과
-- **Submit 버튼 비활성화**: 필수 필드 미입력 OR validation 에러
-
-**유효성 검증:**
-
-| 필드 | 규칙 | 에러 메시지 (EN) | 에러 메시지 (KO) |
-|------|------|------------------|------------------|
-| companyName | 필수 | Company name is required | 회사명은 필수입니다 |
-| companyName | 최소 2자 | Must be at least 2 characters | 최소 2자 이상 입력해주세요 |
-| country | 필수 | Country is required | 국가는 필수입니다 |
-| businessRegNo | 필수 | Business Reg. No. is required | 사업자등록번호는 필수입니다 |
-| businessRegNo | 국가별 형식 | Invalid format | 형식이 올바르지 않습니다 |
-| contactPerson | 필수 | Contact person is required | 담당자명은 필수입니다 |
-| contactPerson | 최소 2자 | Must be at least 2 characters | 최소 2자 이상 입력해주세요 |
-| contactEmail | 필수 | Email is required | 이메일은 필수입니다 |
-| contactEmail | 이메일 형식 | Invalid email format | 이메일 형식이 올바르지 않습니다 |
-| note | 최대 280자 | Max 280 characters | 최대 280자 |
-
-**데이터 요구사항 (제출):**
-
-**API Endpoint:** `POST /api/customers`
-
-**요청 필드:**
-| 필드 | 타입 | 설명 |
-|------|------|------|
-| companyName | string | 회사명 |
-| country | string | 국가 코드 (예: "KR", "US") |
-| businessRegNo | string | 사업자등록번호 |
-| contactPerson | string | 담당자명 |
-| contactEmail | string | 담당자 이메일 |
-| note | string \| null | 노트 (선택) |
-
-**응답:**
-- 생성된 고객 데이터 (ID 포함)
+**Submit 동작**:
+- 유효성 검증 통과 시 고객 생성
+- 체크박스 체크 시 Add Contract Modal 자동 열림
 
 ---
 
@@ -948,7 +910,7 @@ const [rejectionError, setRejectionError] = useState('');
 
 ---
 
-### 📊 Filter Dialog
+### 📊 필터 다이얼로그
 
 **트리거:** Filter 버튼 클릭
 
@@ -1396,7 +1358,7 @@ const [rejectionError, setRejectionError] = useState('');
 
 ---
 
-### 📊 Filter Dialog
+### 📊 필터 다이얼로그
 
 **트리거:** Filter 버튼 클릭
 
@@ -1888,7 +1850,7 @@ difference = billedAmount - paidAmount;
 
 ---
 
-### 📊 Filter Dialog
+### 📊 필터 다이얼로그
 
 **트리거:** Filter 버튼 클릭
 

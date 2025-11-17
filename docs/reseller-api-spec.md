@@ -451,7 +451,7 @@ const [newCustomers, setNewCustomers] = useState<Customer[]>([]);
 
 ---
 
-### 📊 Filter Dialog
+### 📊 필터 다이얼로그
 
 **트리거:** Filter 버튼 클릭
 
@@ -790,7 +790,7 @@ const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
 
 ---
 
-### 📊 Filter Dialog
+### 📊 필터 다이얼로그
 
 **트리거:** Filter 버튼 클릭
 
